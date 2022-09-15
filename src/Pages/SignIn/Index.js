@@ -1,9 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
 
 import * as Animatable from 'react-native-animatable'
+import { Ionicons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 
 export default function SignIn() {
+  const navigation = useNavigation();
+
+  const [senha, setSenha] = useState('');
+  const [esconderSenha, setEsconderSenha] = useState(true);
+  const [email, setEmail] = useState('');
+
+  function VerificaLogin(){
+    if(email == "gn" && senha == "123"){ 
+      navigation.navigate('Home');
+      return; 
+    }
+    
+    alert("Usuário ou Senha Inválido(s)")
+  }
   return (
     <View style={styles.container}>
 
@@ -16,19 +32,39 @@ export default function SignIn() {
         <TextInput 
         placeholder='exemplo@exemplo.exemplo' 
         style={styles.input}
+        value={email}
+        onChangeText={ (valorEmail) => setEmail(valorEmail)}
         />
 
         <Text style={styles.title}>Senha</Text>
-        <TextInput 
-        placeholder='Sua senha' 
-        style={styles.input}
-        />
+        <View style={styles.inputArea}>
+          <TextInput 
+          placeholder='Sua senha' 
+          style={styles.inputAreaText}
+          value={senha}
+          onChangeText={ (valorSenha) => setSenha(valorSenha) }
+          secureTextEntry={esconderSenha}
+          />
 
-        <TouchableOpacity style={styles.button}>
+          <TouchableOpacity 
+          style={styles.icon}
+          onPress={ () => setEsconderSenha(!esconderSenha) }>
+            { esconderSenha 
+              ? <Ionicons name='eye' size={25} color='#dbc500'/>
+              : <Ionicons name='eye-off' size={25} color='#dbc500'/>
+            }
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity 
+        style={styles.button}
+        onPress={ () => VerificaLogin() }>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buttonRegister}>
+        <TouchableOpacity 
+        style={styles.buttonRegister}
+        onPress={ () => navigation.navigate('SignUp') } >
           <Text style={styles.registerText}>Não possui uma conta? Cadastre-se</Text>
         </TouchableOpacity>
 
@@ -91,5 +127,25 @@ const styles = StyleSheet.create({
   },
   registerText:{
     color: '#a1a1a1'
+  },
+  inputArea:{
+    flexDirection: 'row',
+    width: '90%',
+    alignItems: 'center'
+  },
+  inputAreaText:{
+    width: '100%',
+    borderBottomWidth: 1,
+    height: 40,
+    marginBottom: 12,
+    fontSize: 16
+  },
+  icon:{
+    width: '10%',
+    borderBottomWidth: 1,
+    height: 40,
+    marginBottom: 12,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
