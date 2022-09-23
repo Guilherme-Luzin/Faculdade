@@ -37,6 +37,7 @@ export default function SignIn() {
         <Text style={styles.title}>Email</Text>
         <TextInput 
         autoCapitalize='none'
+        keyboardType='email-address'
         placeholder='exemplo@exemplo.exemplo' 
         style={styles.input}
         value={email}
