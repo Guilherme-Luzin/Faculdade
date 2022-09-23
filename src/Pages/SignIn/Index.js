@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TouchableOpacity, 
+  TextInput 
+} from 'react-native'
 
 import * as Animatable from 'react-native-animatable'
 import { Ionicons } from '@expo/vector-icons'
@@ -30,6 +36,7 @@ export default function SignIn() {
       <Animatable.View animation='fadeInUp' delay={500} style={styles.containerForm}>
         <Text style={styles.title}>Email</Text>
         <TextInput 
+        autoCapitalize='none'
         placeholder='exemplo@exemplo.exemplo' 
         style={styles.input}
         value={email}
