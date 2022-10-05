@@ -11,20 +11,31 @@ import * as Animatable from 'react-native-animatable'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 
+import Repositorio_LoginCadastro from '../../Repositorio/Repositorio_LoginCadastro'
+
 export default function SignIn() {
   const navigation = useNavigation();
 
   const [senha, setSenha] = useState('');
   const [esconderSenha, setEsconderSenha] = useState(true);
   const [email, setEmail] = useState('');
+  const [dadosBanco, setDadosBanco] = useState('');
 
   function VerificaLogin(){
-    if(email == "gn" && senha == "123"){ 
-      navigation.navigate('Home');
-      return; 
+    if(email == '' && senha == ''){ 
+      return alert("Usuário ou Senha Inválido(s)"); 
     }
-    
-    alert("Usuário ou Senha Inválido(s)")
+    try{
+      Repositorio_LoginCadastro.obterParaLogin(email, senha).then(dados => setDadosBanco(dados));
+
+      if(dadosBanco == null || dadosBanco.email != email || dadosBanco.senha != senha){
+        return alert("Usuário ou Senha Inválido(s)");
+    }
+      navigation.navigate('Home')
+    }
+    catch(erro){
+      alert(`Erro [${erro}] ao validar login`)
+    }
   }
   return (
     <View style={styles.container}>
@@ -47,7 +58,8 @@ export default function SignIn() {
         <Text style={styles.title}>Senha</Text>
         <View style={styles.inputArea}>
           <TextInput 
-          placeholder='Sua senha' 
+          placeholder='Sua senha'
+          autoCapitalize='none'
           style={styles.inputAreaText}
           value={senha}
           onChangeText={ (valorSenha) => setSenha(valorSenha) }

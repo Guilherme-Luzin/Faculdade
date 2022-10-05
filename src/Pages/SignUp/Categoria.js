@@ -10,15 +10,34 @@ import {
 import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native'
 
-export default function Categoria() {
+import Repositorio_LoginCadastro from '../../Repositorio/Repositorio_LoginCadastro'
+
+export default function Categoria({ route }) {
   const navigation = useNavigation();
+
+  const nome = route.params.nomeCadastro;
+  const email = route.params.emailCadastro;
+  const celular = route.params.celularFormatado;
+  const senha = route.params.senhaCadastro;
 
   const [descricao, setDescricao] = useState('');
   const [categoria, setCategoria] = useState('');
 
   function FinalizaCadastro(){
-    alert('Cadastro realizado com sucesso')
-    navigation.navigate('Home')
+    if(categoria == '' || descricao == ''){
+      return alert("Preencha todos os campos");
+    }
+    try{
+      const dadosUsuario = {nome, email, celular, senha, categoria, descricao}
+      console.log(`${dadosUsuario.nome}, ${dadosUsuario.email}, ${dadosUsuario.celular}, 
+      ${dadosUsuario.senha}, ${dadosUsuario.categoria}, ${dadosUsuario.descricao}`)
+      Repositorio_LoginCadastro.incluirUsuario(dadosUsuario)
+      .then(response => alert('Cadastro realizado com sucesso'))
+      .then(response => navigation.navigate('Home'));
+    }
+    catch(erro){
+      alert(`Erro [${erro}] ao realizar cadastro`)
+    }
   }
 
   return (
