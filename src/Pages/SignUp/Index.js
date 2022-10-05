@@ -36,10 +36,14 @@ export default function SignUp() {
   function CadastroBotao(){
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (!reg.test(emailCadastro)){
-        alert("email no formato inválido: exemplo@exemplo.exemplo");
-        return;
+      return alert("email no formato inválido: exemplo@exemplo.exemplo");
     }
-    navigation.navigate('Categoria')
+    var celularFormatado = celularCadastro.replace(' ', '').replace('(', '').replace(')', '').replace('-', '')
+    if(nomeCadastro == '' || emailCadastro == '' || senhaCadastro == '' || celularCadastro == ''){
+      return alert("Preencha todos os campos")
+    }
+    const dadosUsuario = { nomeCadastro, emailCadastro, senhaCadastro, celularFormatado }
+    navigation.navigate('Categoria', dadosUsuario)
   }
 
   return (
@@ -135,6 +139,7 @@ export default function SignUp() {
         <Text style={styles.title}>Senha</Text>
         <View style={styles.inputArea}>
           <TextInput 
+          autoCapitalize='none'
           placeholder='Sua senha' 
           style={styles.inputAreaText}
           value={senhaCadastro}
