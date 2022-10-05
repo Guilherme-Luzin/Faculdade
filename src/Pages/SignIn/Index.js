@@ -28,10 +28,7 @@ export default function SignIn() {
     try{
       Repositorio_LoginCadastro.obterParaLogin(email, senha).then(dados => setDadosBanco(dados));
 
-      if(dadosBanco == null){
-        return alert("Usuário ou Senha Inválido(s)")
-    }
-    if(dadosBanco.email != email || dadosBanco.senha != senha){
+      if(dadosBanco == null || dadosBanco.email != email || dadosBanco.senha != senha){
         return alert("Usuário ou Senha Inválido(s)");
     }
       navigation.navigate('Home')
