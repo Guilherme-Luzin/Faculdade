@@ -11,7 +11,7 @@ import * as Animatable from 'react-native-animatable'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 
-import Repositorio_LoginCadastro from '../../Repositorio/Repositorio_LoginCadastro'
+import Repositorio_LoginCadastro from '../../Repositorio/Repositorio_Sqlite/Repositorio_LoginCadastro'
 
 export default function SignIn() {
   const navigation = useNavigation();
@@ -26,9 +26,11 @@ export default function SignIn() {
       return alert("Usuário ou Senha Inválido(s)"); 
     }
     try{
-      Repositorio_LoginCadastro.obterParaLogin(email, senha).then(dados => setDadosBanco(dados));
-
-      if(dadosBanco == null || dadosBanco.email != email || dadosBanco.senha != senha){
+      // Repositorio_LoginCadastro.obterTodos().then(dados => setDadosBanco(dados))
+      // console.log(JSON.stringify(dadosBanco))
+      Repositorio_LoginCadastro.obterParaLogin(email, senha).then(dados => setDadosBanco(dados))
+      
+      if(dadosBanco.email != email || dadosBanco.senha != senha){
         return alert("Usuário ou Senha Inválido(s)");
     }
       navigation.navigate('Home')
