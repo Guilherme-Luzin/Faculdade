@@ -1,4 +1,8 @@
-import React from 'react'
+import {
+  Alert,
+  BackHandler,
+} from 'react-native'
+import React, { useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -9,6 +13,26 @@ import Profile from '../Profile/Index';
 const Tab = createBottomTabNavigator();
 
 export default function Home() {
+
+  const backAction = () => {
+    Alert.alert("Atenção!", "Tem certeza que deseja sair do App?", [
+      {
+        text: "Cancelar",
+        onPress: () => null,
+        style: "cancel"
+      },
+      { text: "Sim", onPress: () => BackHandler.exitApp() }
+    ]);
+    return true;
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", backAction);
+
+    return () =>
+      BackHandler.removeEventListener("hardwareBackPress", backAction);
+  }, []);
+  
   return (
     <Tab.Navigator
       screenOptions={{

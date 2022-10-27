@@ -4,17 +4,22 @@ import {
     Text, 
     StyleSheet, 
     TouchableOpacity, 
-    TextInput 
+    TextInput,
+    Modal,
+    Pressable
 } from 'react-native'
 
 import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import Repositorio_LoginCadastro from '../../Repositorio/Repositorio_Sqlite/Repositorio_LoginCadastro'
 
 export default function Categoria({ route }) {
   const navigation = useNavigation();
 
+  const [modal, setModal] = useState(false);
+  const [campo, setCampo] = useState('');
   const nome = route.params.nomeCadastro;
   const email = route.params.emailCadastro;
   const celular = route.params.celularFormatado;
@@ -48,22 +53,67 @@ export default function Categoria({ route }) {
       </Animatable.View>
 
       <Animatable.View animation='fadeInUp' delay={500} style={styles.containerForm}>
+      <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modal}
+          onRequestClose={() => {
+            setModal(!modal);
+          }}
+        >
+          <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>O campo {campo} é obrigatório</Text>
+            <Pressable
+              style={[styles.buttonModal, styles.buttonClose]}
+              onPress={() => setModal(!modal)}
+            >
+              <Text style={styles.textStyle}>Ok</Text>
+            </Pressable>
+          </View>
+        </View>
+        </Modal>
+
         <Text style={styles.title}>Selecione a Categoria</Text>
-        <TextInput 
-          placeholder='Sua Categoria' 
-          style={styles.input}
-          value={categoria}
-          onChangeText={ (valorCategoria) => setCategoria(valorCategoria) }
-          />
+        <View style={styles.inputArea}>
+          <TextInput 
+            placeholder='Sua Categoria' 
+            style={styles.inputAreaText}
+            value={categoria}
+            onChangeText={ (valorCategoria) => setCategoria(valorCategoria) }
+            />
+
+          <TouchableOpacity 
+          style={styles.icon}
+          onPress={() => {setModal(!modal), setCampo('categoria')}}
+          disabled={categoria == '' ? false : true}>
+            { categoria == '' 
+              ? <MaterialIcons name='error-outline' size={25} color='#ff0000'/>
+              : ''
+            }
+          </TouchableOpacity>
+        </View>
 
         <Text style={styles.title}>Descrição da Categoria</Text>
-        <TextInput 
-        placeholder='Escreva uma breve descrição do que você faz' 
-        multiline={true}
-        style={styles.inputDescricao}
-        value={descricao}
-        onChangeText={ (valorDescricao) => setDescricao(valorDescricao) }
-        />
+        <View style={styles.inputArea}>
+          <TextInput 
+          placeholder='Escreva uma breve descrição do que você faz' 
+          multiline={true}
+          style={styles.inputDescricao}
+          value={descricao}
+          onChangeText={ (valorDescricao) => setDescricao(valorDescricao) }
+          />
+
+          <TouchableOpacity 
+          style={styles.iconDescricao}
+          onPress={() => {setModal(!modal), setCampo('Descrição da categoria')}}
+          disabled={descricao == '' ? false : true}>
+            { descricao == '' 
+              ? <MaterialIcons name='error-outline' size={25} color='#ff0000'/>
+              : ''
+            }
+          </TouchableOpacity>
+        </View>
 
         <TouchableOpacity 
         style={styles.button}
@@ -104,13 +154,38 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 28
   },
-  input:{
+  inputArea:{
+    flexDirection: 'row',
+    width: '90%',
+    alignItems: 'center'
+  },
+  inputAreaText:{
+    width: '100%',
     borderBottomWidth: 1,
     height: 40,
     marginBottom: 12,
     fontSize: 16
   },
+  icon:{
+    width: '10%',
+    borderBottomWidth: 1,
+    height: 40,
+    marginBottom: 12,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  iconDescricao:{
+    width: '10%',
+    height: 40,
+    marginBottom: 12,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   inputDescricao:{
+    width: '100%',
+    height: 40,
+    marginBottom: 12,
+    fontSize: 16,
     borderBottomWidth: 1,
     borderLeftWidth: 1,
     borderRightWidth: 1,
@@ -135,4 +210,43 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold'
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  buttonModal: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonClose: {
+    backgroundColor: "#dbc500",
+    width: '100%'
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 })

@@ -4,7 +4,8 @@ import {
   Text, 
   StyleSheet, 
   TouchableOpacity, 
-  TextInput, Modal,
+  TextInput, 
+  Modal,
   Pressable 
 } from 'react-native'
 
@@ -87,7 +88,8 @@ export default function SignUp() {
 
           <TouchableOpacity 
           style={styles.icon}
-          onPress={() => {setModal(!modal), setCampo('Nome')}}>
+          onPress={() => {setModal(!modal), setCampo('Nome')}}
+          disabled={nomeCadastro == '' ? false : true}>
             { nomeCadastro == '' 
               ? <MaterialIcons name='error-outline' size={25} color='#ff0000'/>
               : ''
@@ -107,7 +109,8 @@ export default function SignUp() {
 
           <TouchableOpacity 
           style={styles.icon}
-          onPress={() => {setModal(!modal), setCampo('Telefone Celular')}}>
+          onPress={() => {setModal(!modal), setCampo('Telefone Celular')}}
+          disabled={celularCadastro == '' ? false : true}>
             { celularCadastro == '' 
               ? <MaterialIcons name='error-outline' size={25} color='#ff0000'/>
               : ''
@@ -128,7 +131,8 @@ export default function SignUp() {
 
           <TouchableOpacity 
           style={styles.icon}
-          onPress={() => {setModal(!modal), setCampo('Email')}}>
+          onPress={() => {setModal(!modal), setCampo('Email')}}
+          disabled={emailCadastro == '' ? false : true}>
             { emailCadastro == '' 
               ? <MaterialIcons name='error-outline' size={25} color='#ff0000'/>
               : ''
