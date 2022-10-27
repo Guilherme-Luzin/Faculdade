@@ -5,6 +5,7 @@ import SignIn from '../Pages/SignIn/Index';
 import SignUp from '../Pages/SignUp/Index';
 import Home from '../Pages/Home/Index';
 import Categoria from '../Pages/SignUp/Categoria';
+import Services from '../Pages/Services/Index'
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,16 @@ export default function Routes(){
                 name='Categoria'
                 component={Categoria}
                 options={{headerShown: false}}
+            />
+            <Stack.Screen 
+                name='Services'
+                component={Services}
+                options={{
+                    headerTitle:'Cadastrar Serviço',
+                    headerStyle:{
+                        backgroundColor: '#dbc500'
+                }
+            }}
             />
         </Stack.Navigator>
     )
