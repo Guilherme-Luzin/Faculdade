@@ -12,6 +12,7 @@ import {
 import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from '@expo/vector-icons'
+import {Picker} from '@react-native-picker/picker';
 
 import Repositorio_LoginCadastro from '../../Repositorio/Repositorio_Sqlite/Repositorio_LoginCadastro'
 
@@ -29,7 +30,7 @@ export default function Categoria({ route }) {
   const [categoria, setCategoria] = useState('');
 
   function FinalizaCadastro(){
-    if(categoria == '' || descricao == ''){
+    if(categoria == '' || (descricao == '' && categoria != 'Cliente')){
       return alert("Preencha todos os campos");
     }
     try{
@@ -76,12 +77,17 @@ export default function Categoria({ route }) {
 
         <Text style={styles.title}>Selecione a Categoria</Text>
         <View style={styles.inputArea}>
-          <TextInput 
-            placeholder='Sua Categoria' 
-            style={styles.inputAreaText}
-            value={categoria}
-            onChangeText={ (valorCategoria) => setCategoria(valorCategoria) }
-            />
+        <Picker selectedValue={categoria}
+            onValueChange={(itemValue, itemIndex) =>
+            setCategoria(itemValue)}
+            style={styles.pickerStyle}>
+                <Picker.Item label='Selecione sua categoria' value='' />
+                <Picker.Item label='Cliente' value='Cliente'/>
+                <Picker.Item label='Desenvolvedor' value='Desenvolvedor'/>
+                <Picker.Item label='Encanador' value='Encanador'/>
+                <Picker.Item label='Pedreiro' value='Pedreiro'/>
+                <Picker.Item label='Outros' value='Outros'/>
+          </Picker>
 
           <TouchableOpacity 
           style={styles.icon}
@@ -96,8 +102,9 @@ export default function Categoria({ route }) {
 
         <Text style={styles.title}>Descrição da Categoria</Text>
         <View style={styles.inputArea}>
-          <TextInput 
-          placeholder='Escreva uma breve descrição do que você faz' 
+          <TextInput
+          editable={categoria === 'Cliente' ? false : true} 
+          placeholder='Escreva uma breve descrição do que você faz (Não necessário para clientes)' 
           multiline={true}
           style={styles.inputDescricao}
           value={descricao}
@@ -168,7 +175,7 @@ const styles = StyleSheet.create({
   },
   icon:{
     width: '10%',
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     height: 40,
     marginBottom: 12,
     justifyContent: 'center',
@@ -248,5 +255,12 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center"
+  },
+  pickerStyle: {
+    width: '100%',
+    borderBottomWidth: 1,
+    height: 40,
+    marginBottom: 12,
+    fontSize: 16,
   }
 })
