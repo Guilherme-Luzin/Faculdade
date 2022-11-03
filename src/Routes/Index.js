@@ -44,12 +44,7 @@ export default function Routes(){
             <Stack.Screen 
                 name='Services'
                 component={Services}
-                options={{
-                    headerTitle:'Cadastrar Serviço',
-                    headerStyle:{
-                        backgroundColor: '#dbc500'
-                }
-            }}
+                options={{headerShown: false}}
             />
         </Stack.Navigator>
     )
