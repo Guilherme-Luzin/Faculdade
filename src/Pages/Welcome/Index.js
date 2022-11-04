@@ -26,7 +26,7 @@ export default function Welcome() {
       </View>
 
       <Animatable.View delay={600} animation="fadeInUp" style={styles.containerForm}>
-      <Text style={styles.title}>Bem-Vindo ao nomeDoApp</Text>
+      <Text style={styles.title}>Bem-Vindo ao GetNinja</Text>
         <Text style={styles.text}>Faça Login ou Cadastre-se para Começar</Text>
 
         <TouchableOpacity 

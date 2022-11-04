@@ -26,14 +26,12 @@ export default function SignIn() {
       return alert("Usuário ou Senha Inválido(s)"); 
     }
     try{
-      // Repositorio_LoginCadastro.obterTodos().then(dados => setDadosBanco(dados))
-      // console.log(JSON.stringify(dadosBanco))
       Repositorio_LoginCadastro.obterParaLogin(email, senha).then(dados => setDadosBanco(dados))
       
       if(dadosBanco.email != email || dadosBanco.senha != senha){
         return alert("Usuário ou Senha Inválido(s)");
     }
-      navigation.navigate('Home')
+      navigation.navigate('Home', dadosBanco)
     }
     catch(erro){
       alert(`Erro [${erro}] ao validar login`)
