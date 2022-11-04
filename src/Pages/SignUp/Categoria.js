@@ -35,11 +35,10 @@ export default function Categoria({ route }) {
     }
     try{
       const dadosUsuario = {nome, email, celular, senha, categoria, descricao}
-      // console.log(`${dadosUsuario.nome}, ${dadosUsuario.email}, ${dadosUsuario.celular}, 
-      // ${dadosUsuario.senha}, ${dadosUsuario.categoria}, ${dadosUsuario.descricao}`)
+      
       Repositorio_LoginCadastro.incluirUsuario(dadosUsuario)
       .then(response => alert("Cadastrado realizado com sucesso"))
-      .then(response => navigation.navigate('Home'));
+      .then(response => navigation.navigate('Home', dadosUsuario));
     }
     catch(erro){
       alert(`Erro [${erro}] ao realizar cadastro`)

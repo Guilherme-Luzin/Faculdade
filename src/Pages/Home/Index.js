@@ -12,7 +12,9 @@ import Profile from '../Profile/Index';
 
 const Tab = createBottomTabNavigator();
 
-export default function Home() {
+export default function Home({ route }) {
+
+  const usuario = route.params;
 
   const backAction = () => {
     Alert.alert("Atenção!", "Tem certeza que deseja sair do App?", [
@@ -35,7 +37,7 @@ export default function Home() {
   
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
         tabBarShowLabel: false,
         tabBarStyle:{
           position: 'absolute',
@@ -45,12 +47,13 @@ export default function Home() {
         },
         tabBarInactiveTintColor: '#000',
         tabBarActiveTintColor: '#fff'
-      }}
+      })}
     >
 
       <Tab.Screen 
         name='Begin'
         component={Begin}
+        initialParams={{ usuario }}
         options={{
           headerTitle:'Inicio',
           headerStyle:{

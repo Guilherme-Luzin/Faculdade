@@ -1,7 +1,7 @@
 import db from './SqliteDatabase'
 
 db.transaction((tx) => {
-    //tx.executeSql("DROP TABLE cars;");
+    //tx.executeSql("DROP TABLE usuarios;");
 
     tx.executeSql(
         "CREATE TABLE IF NOT EXISTS usuarios (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, email TEXT, senha TEXT, celular INT, categoria TEXT, descricao TEXT);"

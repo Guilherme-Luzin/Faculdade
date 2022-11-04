@@ -11,14 +11,18 @@ import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import * as Animatable from 'react-native-animatable'
 
-export default function Services() {
+import Repositorio_Servicos from '../../Repositorio/Repositorio_Sqlite/Repositorio_Servicos'
+import Repositorio_LoginCadastro from '../../Repositorio/Repositorio_Sqlite/Repositorio_LoginCadastro'
+
+export default function Services({ route }) {
   const navigation = useNavigation();
 
   const [titulo, setTitulo] = useState('');
-  const [descricaoServico, setDescricaoServico] = useState('');
+  const [descricao, setDescricao] = useState('');
   const [valorServico, setValorServico] = useState('');
   const [endereco, setEndereco] = useState('');
   const [cep, setCep] = useState('');
+  const [idUsuario, setIdUsuario] = useState(0);
 
   function FormataCep(cep){
     return cep.replace(/\D/g, '')
@@ -27,13 +31,24 @@ export default function Services() {
   }
 
   function CadastroBotao(){
-    var cepFormatado = cep.replace(' ', '').replace('-', '')
-    if(titulo == '' || descricaoServico == '' || valorServico == '' || endereco == '' || cep == ''){
+    if(titulo == '' || descricao == '' || valorServico == '' || endereco == '' || cep == ''){
       return alert("Preencha todos os campos")
     }
-    const dadosServico = { titulo, descricaoServico, valorServico, endereco, cep }
-    alert('Parabéns')
-    navigation.navigate("Begin")
+
+    setIdUsuario(route.params.id);
+    if(idUsuario === undefined || idUsuario === null || idUsuario === '' || idUsuario === 0){
+      Repositorio_LoginCadastro.obterParaLogin(route.params.email, route.params.senha).then(dados => setIdUsuario(dados.id))
+      
+      if(idUsuario === 0){
+        return alert("Erro ao salvar tente novamente")
+      }
+    }
+
+    var cepFormatado = cep.replace(' ', '').replace('-', '')
+    const dadosServico = { titulo, descricao, endereco, cepFormatado, valorServico, idUsuario }
+    Repositorio_Servicos.incluirServico(dadosServico)
+
+    navigation.navigate("Begin", dadosServico)
   }
   
   const backAction = () => {
@@ -79,8 +94,8 @@ export default function Services() {
           style={styles.inputDescricao}
           multiline={true}
           placeholder='Quero um serviço que...'
-          value={descricaoServico}
-          onChangeText={ (valorDescricao) => setDescricaoServico(valorDescricao)} 
+          value={descricao}
+          onChangeText={ (valorDescricao) => setDescricao(valorDescricao)} 
           />
         </View>
 
