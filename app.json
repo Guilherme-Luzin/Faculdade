@@ -4,10 +4,10 @@
     "slug": "GetNinja",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./src/Assets/logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./src/Assets/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

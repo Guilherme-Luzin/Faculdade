@@ -30,10 +30,18 @@ export default function Begin({ route }) {
             return(
                 <View style={styles.Servico}>
                     <Text
+                    onPress={() => alert(`O recurso de chat ainda está em desenvolvimento, por favor pegue o número do cliente e chame por meio externo - Número do serviço: [${item.celular}]`)}
                     style={styles.nomeTexo}>
                       {item.titulo} - {item.descricao} - Valor: {item.valorServico}
                     </Text>
-                    <Text style={styles.subTexto}>
+                    <Text
+                    onPress={() => alert(`O recurso de chat ainda está em desenvolvimento, por favor pegue o número do cliente e chame por meio externo - Número do serviço: [${item.celular}]`)}
+                    style={styles.enderecoTexto}>
+                      {item.endereco} - Valor: {item.valorServico}
+                    </Text>
+                    <Text 
+                    onPress={() => alert(`O recurso de chat ainda está em desenvolvimento, por favor pegue o número do cliente e chame por meio externo - Número do serviço: [${item.celular}]`)}
+                    style={styles.subTexto}>
                         Numero do Cliente: {item.celular} | Nome: {item.nome}
                     </Text>
                 </View>
@@ -79,26 +87,38 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   nomeTexo:{
-      width:"75%",
-      alignContent: "flex-start",
-      backgroundColor: "#253bfa",
-      padding: 12,
-      paddingHorizontal: 20,
-      marginBottom: 5,
-      marginRight: 15,
-      color: "#fff",
-      fontSize: 20
+    width:"75%",
+    alignContent: "flex-start",
+    backgroundColor: "#253bfa",
+    padding: 12,
+    paddingHorizontal: 20,
+    marginBottom: 5,
+    marginRight: 15,
+    color: "#fff",
+    fontSize: 20
   },
   subTexto:{
-      width:"75%",
-      alignContent: "flex-start",
-      backgroundColor: "#253bfa",
-      color: "#fff",
-      padding: 12,
-      paddingHorizontal: 20,
-      marginRight: 15,
-      marginTop: -20,
-      color: "#fff",
-      fontSize: 15
-  }
+    width:"75%",
+    alignContent: "flex-start",
+    backgroundColor: "#253bfa",
+    color: "#fff",
+    padding: 12,
+    paddingHorizontal: 20,
+    marginRight: 15,
+    marginTop: -5,
+    color: "#fff",
+    fontSize: 15
+  },
+  enderecoTexto:{
+  width:"75%",
+  alignContent: "flex-start",
+  backgroundColor: "#253bfa",
+  color: "#fff",
+  padding: 12,
+  paddingHorizontal: 20,
+  marginRight: 15,
+  marginTop: -20,
+  color: "#fff",
+  fontSize: 20
+}
 })
