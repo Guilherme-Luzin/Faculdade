@@ -14,10 +14,10 @@ import Repositorio_Servicos from '../../Repositorio/Repositorio_Sqlite/Repositor
 export default function Begin({ route }) {
   const navigation = useNavigation();
 
-  const [dadosBanco, setDadosBanco] = useState('');
+  const [dadosBanco, setDadosBanco] = useState([]);
 
   useEffect(() => {
-    Repositorio_Servicos.obterTodos().then(itens => setDadosBanco(itens));
+    Repositorio_Servicos.obterComUsuario().then(itens => setDadosBanco(itens));
   }, [route]);
 
   // console.log(dadosBanco);
@@ -26,20 +26,23 @@ export default function Begin({ route }) {
       <FlatList 
         showsVerticalScrollIndicator={false}
         data={dadosBanco}
-        renderItem={( { itens } ) => {
+        renderItem={( { item } ) => {
             return(
-                <View style={styles.task}>
+                <View style={styles.Servico}>
                     <Text
                     style={styles.nomeTexo}>
-                        {dadosBanco.titulo}
+                      Titulo: {item.titulo} | Descrição {item.descricao}
                     </Text>
+                    <Text style={styles.subTexto}>
+                        Numero do Cliente: {item.celular} | Nome: {item.nome}
+                      </Text>
                 </View>
             )
         }}
       />
 
       <TouchableOpacity 
-      style={styles.buttonNewTask}
+      style={styles.buttonNewServico}
       onPress={() => navigation.navigate("Services", route.params.usuario)}>
           <Text style={styles.iconButton}>
             <AntDesign name="plus" size={24} color="black" />
@@ -53,7 +56,7 @@ const styles = StyleSheet.create({
   container:{
     flex: 1,
   },
-  buttonNewTask:{
+  buttonNewServico:{
     width: 60,
     height: 60,
     position: "absolute",
@@ -69,20 +72,32 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold"
   },
-  task:{
+  Servico:{
     width: "133%",
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
     marginTop: 10
   },
   nomeTexo:{
       width:"75%",
       alignContent: "flex-start",
-      backgroundColor: "#6a6a6b",
+      backgroundColor: "#253bfa",
       padding: 12,
       paddingHorizontal: 20,
-      borderRadius: 50,
       marginBottom: 5,
       marginRight: 15,
+      color: "#fff",
+      fontSize: 20
   },
+  subTexto:{
+      width:"75%",
+      alignContent: "flex-start",
+      backgroundColor: "#253bfa",
+      color: "#fff",
+      padding: 12,
+      paddingHorizontal: 20,
+      marginRight: 15,
+      marginTop: -20,
+      color: "#fff",
+  }
 })
