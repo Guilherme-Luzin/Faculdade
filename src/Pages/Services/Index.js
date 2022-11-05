@@ -79,7 +79,6 @@ export default function Services({ route }) {
       <Text style={styles.title}>Titulo do Seriço</Text>
         <View style={styles.inputArea}>
           <TextInput 
-          autoCapitalize='characters'
           style={styles.inputAreaText}
           placeholder='Titulo do serviço'
           value={titulo}

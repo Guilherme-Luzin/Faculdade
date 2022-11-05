@@ -31,11 +31,11 @@ export default function Begin({ route }) {
                 <View style={styles.Servico}>
                     <Text
                     style={styles.nomeTexo}>
-                      Titulo: {item.titulo} | Descrição {item.descricao}
+                      {item.titulo} - {item.descricao} - Valor: {item.valorServico}
                     </Text>
                     <Text style={styles.subTexto}>
                         Numero do Cliente: {item.celular} | Nome: {item.nome}
-                      </Text>
+                    </Text>
                 </View>
             )
         }}
