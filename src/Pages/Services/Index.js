@@ -89,7 +89,6 @@ export default function Services({ route }) {
         <Text style={styles.title}>Descrição do que deseja</Text>
         <View style={styles.inputArea}>
           <TextInput 
-          autoCapitalize='characters'
           style={styles.inputDescricao}
           multiline={true}
           placeholder='Quero um serviço que...'
