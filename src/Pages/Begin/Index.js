@@ -15,6 +15,16 @@ export default function Begin({ route }) {
   const navigation = useNavigation();
 
   const [dadosBanco, setDadosBanco] = useState([]);
+  function FormataCelular(celular){
+    return celular.replace(/\D/g, '')
+            .replace(/(\d{2})(\d)/, '($1) $2')
+            .replace(/(\d{5})(\d)/, '$1-$2')
+            .replace(/(-\d{4})\d+?$/, '$1');
+  }
+
+  function AlertaDeChat(celular){
+    return alert(`O recurso de chat ainda está em desenvolvimento, por favor pegue o número do cliente e chame por meio externo - Número do Cliente: [${FormataCelular(celular)}]`)
+  }
 
   useEffect(() => {
     Repositorio_Servicos.obterComUsuario().then(itens => setDadosBanco(itens));
@@ -30,19 +40,19 @@ export default function Begin({ route }) {
             return(
                 <View style={styles.Servico}>
                     <Text
-                    onPress={() => alert(`O recurso de chat ainda está em desenvolvimento, por favor pegue o número do cliente e chame por meio externo - Número do serviço: [${item.celular}]`)}
+                    onPress={() => AlertaDeChat(item.celular.toString())}
                     style={styles.nomeTexo}>
                       {item.titulo} - {item.descricao} - Valor: {item.valorServico}
                     </Text>
                     <Text
-                    onPress={() => alert(`O recurso de chat ainda está em desenvolvimento, por favor pegue o número do cliente e chame por meio externo - Número do serviço: [${item.celular}]`)}
+                    onPress={() => AlertaDeChat(item.celular.toString())}
                     style={styles.enderecoTexto}>
-                      {item.endereco} - Valor: {item.valorServico}
+                      {item.endereco} - {item.cep}
                     </Text>
                     <Text 
-                    onPress={() => alert(`O recurso de chat ainda está em desenvolvimento, por favor pegue o número do cliente e chame por meio externo - Número do serviço: [${item.celular}]`)}
+                    onPress={() => AlertaDeChat(item.celular.toString())}
                     style={styles.subTexto}>
-                        Numero do Cliente: {item.celular} | Nome: {item.nome}
+                        Numero do Cliente: {FormataCelular(item.celular.toString())} | Nome: {item.nome}
                     </Text>
                 </View>
             )
@@ -82,6 +92,7 @@ const styles = StyleSheet.create({
   },
   Servico:{
     width: "133%",
+    backgroundColor: "#253bfa",
     flexDirection: "column",
     justifyContent: "space-between",
     marginTop: 10
@@ -89,7 +100,6 @@ const styles = StyleSheet.create({
   nomeTexo:{
     width:"75%",
     alignContent: "flex-start",
-    backgroundColor: "#253bfa",
     padding: 12,
     paddingHorizontal: 20,
     marginBottom: 5,
@@ -100,19 +110,17 @@ const styles = StyleSheet.create({
   subTexto:{
     width:"75%",
     alignContent: "flex-start",
-    backgroundColor: "#253bfa",
     color: "#fff",
     padding: 12,
     paddingHorizontal: 20,
     marginRight: 15,
-    marginTop: -5,
+    marginTop: -15,
     color: "#fff",
     fontSize: 15
   },
   enderecoTexto:{
   width:"75%",
   alignContent: "flex-start",
-  backgroundColor: "#253bfa",
   color: "#fff",
   padding: 12,
   paddingHorizontal: 20,

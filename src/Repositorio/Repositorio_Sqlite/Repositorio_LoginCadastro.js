@@ -56,6 +56,22 @@ const obterTodos = () => {
     });
 };
 
+const atualizarUsuario = (obj, id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "UPDATE usuarios SET nome=?, email=?, celular=?, categoria=?, descricao=? WHERE id=?;",
+        [obj.nome, obj.email, obj.celularFormatado, obj.categoria, obj.descricao, id],
+        (_, { rowsAffected }) => {
+          if (rowsAffected > 0) resolve(rowsAffected);
+          else reject("Error updating obj: id=" + id);
+        },
+        (_, error) => reject(error)
+      );
+    });
+  });
+}
+
 const deletarUsuario = (id) => {
     return new Promise((resolve, reject) => {
       db.transaction((tx) => {
@@ -75,5 +91,6 @@ export default {
     incluirUsuario,
     obterParaLogin,
     obterTodos,
-    deletarUsuario
+    deletarUsuario,
+    atualizarUsuario
 }
