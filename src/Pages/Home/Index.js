@@ -90,6 +90,7 @@ export default function Home({ route }) {
       <Tab.Screen 
         name='Profile'
         component={Profile}
+        initialParams={{ usuario }}
         options={{
           headerTitle:'Meu Perfil',
           headerStyle:{

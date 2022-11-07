@@ -35,10 +35,8 @@ export default function Services({ route }) {
       return alert("Preencha todos os campos")
     }
 
-    setIdUsuario(route.params.id);
     if(idUsuario === undefined || idUsuario === null || idUsuario === '' || idUsuario === 0){
       Repositorio_LoginCadastro.obterParaLogin(route.params.email, route.params.senha).then(dados => setIdUsuario(dados.id))
-      
       if(idUsuario === 0){
         return alert("Erro ao salvar tente novamente")
       }
@@ -65,10 +63,12 @@ export default function Services({ route }) {
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", backAction);
-
+    
+    Repositorio_LoginCadastro.obterParaLogin(route.params.email, route.params.senha).then(dados => setIdUsuario(dados.id))
     return () =>
       BackHandler.removeEventListener("hardwareBackPress", backAction);
-  }, []);
+  }, [route]);
+
   return (
     <View style={styles.container}>
       <Animatable.View animation='fadeInLeft' delay={500} style={styles.containerHeader}>
