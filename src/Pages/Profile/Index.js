@@ -110,7 +110,7 @@ export default function Profile({ route }) {
         <Text style={styles.title}>Descrição da Categoria</Text>
         <View style={styles.inputArea}>
           <TextInput 
-          style={styles.inputAreaText}
+          style={styles.inputDescricao}
           editable={categoria === 'Cliente' ? false : true} 
           placeholder='Escreva uma breve descrição do que você faz (Não necessário para clientes)' 
           multiline={true}
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   }, 
   title:{
     fontSize: 20,
-    marginTop: 28
+    marginTop: 18
   },
   inputArea:{
     flexDirection: 'row',
@@ -163,21 +163,18 @@ const styles = StyleSheet.create({
     width: '100%',
     borderBottomWidth: 1,
     height: 40,
-    marginBottom: 12,
     fontSize: 16
   },
   inputAreaEmail:{
     width: '100%',
     borderBottomWidth: 1,
     height: 40,
-    marginBottom: 12,
     fontSize: 16,
     backgroundColor: "#ebebeb",
   },
   inputDescricao:{
     width: '100%',
     height: 40,
-    marginBottom: 12,
     fontSize: 16,
     borderBottomWidth: 1,
     borderLeftWidth: 1,
@@ -191,18 +188,14 @@ const styles = StyleSheet.create({
   },
   pickerStyle: {
     width: '100%',
-    borderBottomWidth: 1,
-    height: 40,
     marginBottom: 12,
     fontSize: 16,
-    borderBottomColor: "#000"
   },
   button:{
     backgroundColor: '#dbc500',
     width: '100%',
     borderRadius: 4,
     paddingVertical: 8,
-    marginTop: 14,
     justifyContent: 'center',
     alignItems: 'center'
   },
