@@ -53,8 +53,24 @@ const obterComUsuario = () => {
     });
 };
 
+const deletarServico = (id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "DELETE FROM servicos WHERE id=?;",
+        [id],
+        (_, { rowsAffected }) => {
+          resolve(rowsAffected);
+        },
+        (_, error) => reject(error)
+      );
+    });
+  });
+};
+
 export default {
     incluirServico,
     obterTodos,
-    obterComUsuario
+    obterComUsuario,
+    deletarServico
 }
