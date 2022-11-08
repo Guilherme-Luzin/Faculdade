@@ -4,6 +4,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
+  Alert,
+  Modal,
+  Pressable
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { AntDesign } from '@expo/vector-icons'
@@ -15,6 +18,9 @@ export default function Begin({ route }) {
   const navigation = useNavigation();
 
   const [dadosBanco, setDadosBanco] = useState([]);
+  const [modal, setModal] = useState(false);
+  const [servicoModal, setServicoModal] = useState('');
+  
   function FormataCelular(celular){
     return celular.replace(/\D/g, '')
             .replace(/(\d{2})(\d)/, '($1) $2')
@@ -26,13 +32,76 @@ export default function Begin({ route }) {
     return alert(`O recurso de chat ainda está em desenvolvimento, por favor pegue o número do cliente e chame por meio externo - Número do Cliente: [${FormataCelular(celular)}]`)
   }
 
+  function deletarServico(id){
+    Repositorio_Servicos.deletarServico(id)
+    .then(alert("Serviço deletado com sucesso"))
+    .then(setModal(!modal))
+    .then(navigation.navigate("Begin"))
+  }
+
   useEffect(() => {
     Repositorio_Servicos.obterComUsuario().then(itens => setDadosBanco(itens));
   }, [route]);
 
-  // console.log(dadosBanco);
   return (
     <View style={styles.container}>
+
+      <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modal}
+          onRequestClose={() => {
+            setModal(!modal);
+          }}
+        >
+          <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Detalhes Do Serviço</Text>
+            
+            <Text style={styles.modalSubTitle}>titulo:</Text>
+            <Text style={styles.modalText}>{servicoModal.titulo}</Text>
+            
+            <Text style={styles.modalSubTitle}>Descriçao:</Text>
+            <Text style={styles.modalText}>{servicoModal.descricao}</Text>
+            
+            <Text style={styles.modalSubTitle}>Nome do cliente:</Text>
+            <Text style={styles.modalText}>{servicoModal.nome}</Text>
+
+            <Text style={styles.modalSubTitle}>Número do cliente:</Text>
+            <Text style={styles.modalText}>{FormataCelular(servicoModal.celular.toString())}</Text>
+
+            <Text style={styles.modalSubTitle}>Endereço:</Text>
+            <Text style={styles.modalText}>{servicoModal.endereco} - {servicoModal.cep}</Text>
+
+            <Text style={styles.modalSubTitle}>Valor Do Serviço:</Text>
+            <Text style={styles.modalText}>{servicoModal.valorServico}</Text>
+            
+            <View style={styles.containerButtonModal}>
+              <Pressable
+                style={[styles.buttonModal, styles.buttonClose]}
+                onPress={() => AlertaDeChat(servicoModal.celular.toString())}
+              >
+                <Text style={styles.textStyle}>Aceitar Serviço</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.buttonModal, styles.buttonClose]}
+                onPress={() => setModal(!modal)}
+              >
+                <Text style={styles.textStyle}>Fechar</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.buttonModal, styles.buttonDelete]}
+                onPress={() => servicoModal.nome == route.params.usuario.nome
+                  ? deletarServico(servicoModal.id)
+                  : alert('Somente o criador do serviço pode deletá-lo')}
+              >
+                <Text style={styles.textStyle}>Deletar</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       <FlatList 
         showsVerticalScrollIndicator={false}
         data={dadosBanco}
@@ -40,17 +109,17 @@ export default function Begin({ route }) {
             return(
                 <View style={styles.Servico}>
                     <Text
-                    onPress={() => AlertaDeChat(item.celular.toString())}
+                    onPress={() => {setModal(!modal), setServicoModal(item)}}
                     style={styles.nomeTexo}>
                       {item.titulo} - {item.descricao} - Valor: {item.valorServico}
                     </Text>
                     <Text
-                    onPress={() => AlertaDeChat(item.celular.toString())}
+                    onPress={() => {setModal(!modal), setServicoModal(item)}}
                     style={styles.enderecoTexto}>
                       {item.endereco} - {item.cep}
                     </Text>
                     <Text 
-                    onPress={() => AlertaDeChat(item.celular.toString())}
+                    onPress={() => {setModal(!modal), setServicoModal(item)}}
                     style={styles.subTexto}>
                         Numero do Cliente: {FormataCelular(item.celular.toString())} | Nome: {item.nome}
                     </Text>
@@ -128,5 +197,64 @@ const styles = StyleSheet.create({
   marginTop: -20,
   color: "#fff",
   fontSize: 20
-}
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  buttonModal: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonClose: {
+    backgroundColor: "#dbc500",
+    width: '100%'
+  },
+  buttonDelete: {
+    backgroundColor: "red",
+    width: '100%',
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 10,
+    textAlign: "center",
+    fontSize: 16,
+  },
+  modalTitle: {
+    marginBottom: 20,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  modalSubTitle: {
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  containerButtonModal: {
+    width: "45%",
+    flexDirection: "row",
+  }
 })
