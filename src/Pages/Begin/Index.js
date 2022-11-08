@@ -81,13 +81,19 @@ export default function Begin({ route }) {
                 style={[styles.buttonModal, styles.buttonClose]}
                 onPress={() => AlertaDeChat(servicoModal.celular.toString())}
               >
-                <Text style={styles.textStyle}>Aceitar Serviço</Text>
+                <Text style={styles.textStyle}>Aceitar</Text>
               </Pressable>
               <Pressable
                 style={[styles.buttonModal, styles.buttonClose]}
                 onPress={() => setModal(!modal)}
               >
                 <Text style={styles.textStyle}>Fechar</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.buttonModal, styles.buttonEdit]}
+                onPress={() => AlertaDeChat(servicoModal.celular.toString())}
+              >
+                <Text style={styles.textStyle}>Editar</Text>
               </Pressable>
               <Pressable
                 style={[styles.buttonModal, styles.buttonDelete]}
@@ -232,6 +238,10 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     width: '100%',
   },
+  buttonEdit: {
+    backgroundColor: "blue",
+    width: '100%',
+  },
   textStyle: {
     color: "white",
     fontWeight: "bold",
@@ -254,7 +264,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   containerButtonModal: {
-    width: "45%",
+    width: "35%",
     flexDirection: "row",
   }
 })
