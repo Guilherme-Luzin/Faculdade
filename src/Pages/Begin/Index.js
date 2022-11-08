@@ -68,7 +68,7 @@ export default function Begin({ route }) {
             <Text style={styles.modalText}>{servicoModal.nome}</Text>
 
             <Text style={styles.modalSubTitle}>Número do cliente:</Text>
-            <Text style={styles.modalText}>{FormataCelular(servicoModal.celular.toString())}</Text>
+            <Text style={styles.modalText}>{servicoModal.celular}</Text>
 
             <Text style={styles.modalSubTitle}>Endereço:</Text>
             <Text style={styles.modalText}>{servicoModal.endereco} - {servicoModal.cep}</Text>
