@@ -22,10 +22,16 @@ export default function Begin({ route }) {
   const [servicoModal, setServicoModal] = useState('');
   
   function FormataCelular(celular){
-    return celular.replace(/\D/g, '')
-            .replace(/(\d{2})(\d)/, '($1) $2')
-            .replace(/(\d{5})(\d)/, '$1-$2')
-            .replace(/(-\d{4})\d+?$/, '$1');
+    return celular?.replace(/\D/g, '')
+            ?.replace(/(\d{2})(\d)/, '($1) $2')
+            ?.replace(/(\d{5})(\d)/, '$1-$2')
+            ?.replace(/(-\d{4})\d+?$/, '$1');
+  }
+
+  function FormataCep(cep){
+    return cep?.replace(/\D/g, '')
+              ?.replace(/(\d{5})(\d)/, '$1-$2')
+              ?.replace(/(-\d{3})\d+?$/, '$1');
   }
 
   function AlertaDeChat(celular){
@@ -33,10 +39,18 @@ export default function Begin({ route }) {
   }
 
   function deletarServico(id){
-    Repositorio_Servicos.deletarServico(id)
-    .then(alert("Serviço deletado com sucesso"))
-    .then(setModal(!modal))
-    .then(navigation.navigate("Begin"))
+    Alert.alert("Atenção!", "Tem certeza que deseja deletar o serviço selecionado?", [
+      {
+        text: "Cancelar",
+        onPress: () => null,
+        style: "cancel"
+      },
+      { text: "Sim", onPress: () => Repositorio_Servicos.deletarServico(id)
+                                    .then(alert("Serviço deletado com sucesso"))
+                                    .then(setModal(!modal))
+                                    .then(navigation.navigate("Begin")) 
+      }
+    ]);
   }
 
   useEffect(() => {
@@ -68,10 +82,10 @@ export default function Begin({ route }) {
             <Text style={styles.modalText}>{servicoModal.nome}</Text>
 
             <Text style={styles.modalSubTitle}>Número do cliente:</Text>
-            <Text style={styles.modalText}>{servicoModal.celular}</Text>
+            <Text style={styles.modalText}>{FormataCelular(servicoModal.celular?.toString())}</Text>
 
             <Text style={styles.modalSubTitle}>Endereço:</Text>
-            <Text style={styles.modalText}>{servicoModal.endereco} - {servicoModal.cep}</Text>
+            <Text style={styles.modalText}>{servicoModal.endereco} - {FormataCep(servicoModal.cep?.toString())}</Text>
 
             <Text style={styles.modalSubTitle}>Valor Do Serviço:</Text>
             <Text style={styles.modalText}>{servicoModal.valorServico}</Text>
@@ -91,7 +105,9 @@ export default function Begin({ route }) {
               </Pressable>
               <Pressable
                 style={[styles.buttonModal, styles.buttonEdit]}
-                onPress={() => AlertaDeChat(servicoModal.celular.toString())}
+                onPress={() => servicoModal.nome == route.params.usuario.nome
+                  ? navigation.navigate("Services", servicoModal)
+                  : alert('Somente o criador do serviço pode editá-lo')}
               >
                 <Text style={styles.textStyle}>Editar</Text>
               </Pressable>
@@ -122,12 +138,12 @@ export default function Begin({ route }) {
                     <Text
                     onPress={() => {setModal(!modal), setServicoModal(item)}}
                     style={styles.enderecoTexto}>
-                      {item.endereco} - {item.cep}
+                      {item.endereco} - {FormataCep(item.cep?.toString())}
                     </Text>
                     <Text 
                     onPress={() => {setModal(!modal), setServicoModal(item)}}
                     style={styles.subTexto}>
-                        Numero do Cliente: {FormataCelular(item.celular.toString())} | Nome: {item.nome}
+                        Numero do Cliente: {FormataCelular(item.celular?.toString())} | Nome: {item.nome}
                     </Text>
                 </View>
             )

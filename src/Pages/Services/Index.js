@@ -25,9 +25,9 @@ export default function Services({ route }) {
   const [idUsuario, setIdUsuario] = useState(0);
 
   function FormataCep(cep){
-    return cep.replace(/\D/g, '')
-              .replace(/(\d{5})(\d)/, '$1-$2')
-              .replace(/(-\d{3})\d+?$/, '$1');
+    return cep?.replace(/\D/g, '')
+              ?.replace(/(\d{5})(\d)/, '$1-$2')
+              ?.replace(/(-\d{3})\d+?$/, '$1');
   }
 
   function CadastroBotao(){
@@ -44,9 +44,16 @@ export default function Services({ route }) {
 
     var cepFormatado = cep.replace(' ', '').replace('-', '')
     const dadosServico = { titulo, descricao, endereco, cepFormatado, valorServico, idUsuario }
-    Repositorio_Servicos.incluirServico(dadosServico)
 
-    navigation.navigate("Begin", dadosServico)
+    if(route.params.titulo != undefined && route.params.titulo != null && route.params.titulo != ''){
+      Repositorio_Servicos.atualizarServico(dadosServico, route.params.id)
+      .then(alert("Serviço editado com sucesso"))
+      .then(navigation.navigate("Begin", dadosServico))
+      return;
+    }
+    Repositorio_Servicos.incluirServico(dadosServico)
+    .then(alert("Serviço salvo com sucesso"))
+    .then(navigation.navigate("Begin", dadosServico))
   }
   
   const backAction = () => {
@@ -63,12 +70,20 @@ export default function Services({ route }) {
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", backAction);
+
+    if(route.params.titulo != undefined && route.params.titulo != null && route.params.titulo != ''){
+      setTitulo(route.params.titulo)
+      setDescricao(route.params.descricao)
+      setValorServico(route.params.valorServico?.toString())
+      setEndereco(route.params.endereco)
+      setCep(FormataCep(route.params.cep?.toString()))
+    }
     
     Repositorio_LoginCadastro.obterParaLogin(route.params.email, route.params.senha).then(dados => setIdUsuario(dados.id))
     return () =>
       BackHandler.removeEventListener("hardwareBackPress", backAction);
   }, [route]);
-
+  
   return (
     <View style={styles.container}>
       <Animatable.View animation='fadeInLeft' delay={500} style={styles.containerHeader}>
@@ -132,7 +147,7 @@ export default function Services({ route }) {
         <TouchableOpacity 
         style={styles.button}
         onPress={CadastroBotao}>
-          <Text style={styles.buttonText}>Cadastrar Serviço</Text>
+          <Text style={styles.buttonText}>Salvar Serviço</Text>
         </TouchableOpacity>
       </Animatable.View>
     </View>
