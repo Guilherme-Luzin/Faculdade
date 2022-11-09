@@ -53,6 +53,22 @@ const obterComUsuario = () => {
     });
 };
 
+const atualizarServico = (obj, id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "UPDATE servicos SET titulo=?, descricao=?, endereco=?, cep=?, valorServico=? WHERE id=?;",
+        [obj.titulo, obj.descricao, obj.endereco, obj.cepFormatado, obj.valorServico, id],
+        (_, { rowsAffected }) => {
+          if (rowsAffected > 0) resolve(rowsAffected);
+          else reject("Error updating obj: id=" + id);
+        },
+        (_, error) => reject(error)
+      );
+    });
+  });
+}
+
 const deletarServico = (id) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -72,5 +88,6 @@ export default {
     incluirServico,
     obterTodos,
     obterComUsuario,
-    deletarServico
+    deletarServico,
+    atualizarServico
 }
