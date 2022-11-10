@@ -73,7 +73,6 @@ export default function Services({ route }) {
     BackHandler.addEventListener("hardwareBackPress", backAction);
 
     if(route.params.titulo != undefined && route.params.titulo != null && route.params.titulo != ''){
-      console.log(route)
       setTitulo(route.params.titulo)
       setDescricaoServico(route.params.descricaoServico)
       setValorServico(route.params.valorServico?.toString())
