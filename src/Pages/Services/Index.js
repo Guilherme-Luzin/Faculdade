@@ -18,7 +18,7 @@ export default function Services({ route }) {
   const navigation = useNavigation();
 
   const [titulo, setTitulo] = useState('');
-  const [descricao, setDescricao] = useState('');
+  const [descricaoServico, setDescricaoServico] = useState('');
   const [valorServico, setValorServico] = useState('');
   const [endereco, setEndereco] = useState('');
   const [cep, setCep] = useState('');
@@ -31,7 +31,7 @@ export default function Services({ route }) {
   }
 
   function CadastroBotao(){
-    if(titulo == '' || descricao == '' || valorServico == '' || endereco == '' || cep == ''){
+    if(titulo == '' || descricaoServico == '' || valorServico == '' || endereco == '' || cep == ''){
       return alert("Preencha todos os campos")
     }
 
@@ -43,7 +43,8 @@ export default function Services({ route }) {
     }
 
     var cepFormatado = cep.replace(' ', '').replace('-', '')
-    const dadosServico = { titulo, descricao, endereco, cepFormatado, valorServico, idUsuario }
+    var aceito = 0
+    const dadosServico = { titulo, descricaoServico, endereco, cepFormatado, valorServico, idUsuario, aceito }
 
     if(route.params.titulo != undefined && route.params.titulo != null && route.params.titulo != ''){
       Repositorio_Servicos.atualizarServico(dadosServico, route.params.id)
@@ -72,8 +73,9 @@ export default function Services({ route }) {
     BackHandler.addEventListener("hardwareBackPress", backAction);
 
     if(route.params.titulo != undefined && route.params.titulo != null && route.params.titulo != ''){
+      console.log(route)
       setTitulo(route.params.titulo)
-      setDescricao(route.params.descricao)
+      setDescricaoServico(route.params.descricaoServico)
       setValorServico(route.params.valorServico?.toString())
       setEndereco(route.params.endereco)
       setCep(FormataCep(route.params.cep?.toString()))
@@ -107,8 +109,8 @@ export default function Services({ route }) {
           style={styles.inputDescricao}
           multiline={true}
           placeholder='Quero um serviço que...'
-          value={descricao}
-          onChangeText={ (valorDescricao) => setDescricao(valorDescricao)} 
+          value={descricaoServico}
+          onChangeText={ (valorDescricao) => setDescricaoServico(valorDescricao)} 
           />
         </View>
 
