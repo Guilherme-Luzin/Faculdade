@@ -73,9 +73,9 @@ export default function Profile({ route }) {
         <Text style={styles.message}>Olá {nome}</Text>
         
         <TouchableOpacity
-         onPress={FazerLogout()}>
+         onPress={FazerLogout}>
           <Text style={styles.messageLogout}>
-            <AntDesign name="logout" size={24} color="white" /> Logout
+            <AntDesign name="logout" size={24} color="white" /> Sair
           </Text>
         </TouchableOpacity>
 
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: '#fff',
-    paddingLeft: 100
+    paddingLeft: 155
   },
   containerForm:{
     backgroundColor: '#fff',

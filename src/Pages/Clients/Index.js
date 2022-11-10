@@ -165,7 +165,7 @@ export default function Clients({ route }) {
                       {item.endereco} - {FormataCep(item.cep?.toString())}
                     </Text>
                     <Text 
-                    onPress={() => {setModal(!modal), setServicoModal(item), setEditaConclui("Concluir"), setDeletaDescarta("Descartar")}}
+                    onPress={() => {setEditaConclui("Concluir"), setDeletaDescarta("Descartar"), setModal(!modal), setServicoModal(item)}}
                     style={styles.subTexto}>
                         Numero do Cliente: {FormataCelular(item.celular?.toString())} | Nome: {item.nome}
                     </Text>
@@ -187,7 +187,7 @@ export default function Clients({ route }) {
                       {item.titulo} - {item.descricaoServico} - Valor: {item.valorServico}
                     </Text>
                     <Text
-                    onPress={() => {setModal(!modal), setServicoModal(item), setEditaConclui("Editar"), setDeletaDescarta("Deletar")}}
+                    onPress={() => {setEditaConclui("Editar"), setDeletaDescarta("Deletar"), setModal(!modal), setServicoModal(item)}}
                     style={styles.enderecoTexto}>
                       {item.endereco} - {FormataCep(item.cep?.toString())}
                     </Text>
