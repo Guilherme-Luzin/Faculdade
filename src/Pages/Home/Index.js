@@ -55,7 +55,7 @@ export default function Home({ route }) {
         component={Begin}
         initialParams={{ usuario }}
         options={{
-          headerTitle:'Inicio',
+          headerTitle:`Olá ${usuario.nome} - ${usuario.categoria}`,
           headerStyle:{
             backgroundColor: '#dbc500'
           },
@@ -72,10 +72,11 @@ export default function Home({ route }) {
       <Tab.Screen 
         name='Clients'
         component={Clients}
+        initialParams={{ usuario }}
         options={{
           headerTitle:'Clientes',
           headerStyle:{
-            backgroundColor: '#dbc500'
+            backgroundColor: '#dbc500',
           },
           tabBarIcon: ({color, size, focused}) => {
             if(focused){

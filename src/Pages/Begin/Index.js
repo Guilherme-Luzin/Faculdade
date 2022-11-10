@@ -11,6 +11,7 @@ import {
 import { useNavigation } from '@react-navigation/native'
 import { AntDesign } from '@expo/vector-icons'
 import React, { useEffect, useState } from 'react'
+import * as Animatable from 'react-native-animatable'
 
 import Repositorio_Servicos from '../../Repositorio/Repositorio_Sqlite/Repositorio_Servicos'
 
@@ -34,10 +35,6 @@ export default function Begin({ route }) {
               ?.replace(/(-\d{3})\d+?$/, '$1');
   }
 
-  function AlertaDeChat(celular){
-    return alert(`O recurso de chat ainda está em desenvolvimento, por favor pegue o número do cliente e chame por meio externo - Número do Cliente: [${FormataCelular(celular)}]`)
-  }
-
   function deletarServico(id){
     Alert.alert("Atenção!", "Tem certeza que deseja deletar o serviço selecionado?", [
       {
@@ -51,6 +48,15 @@ export default function Begin({ route }) {
                                     .then(navigation.navigate("Begin")) 
       }
     ]);
+  }
+
+  function AceitarServico(servico){
+    servico.aceito = 1
+    servico.idAceito = route.params.usuario.id
+
+    Repositorio_Servicos.atualizarAceitoIdAceito(servico.aceito, servico.idAceito, servico.id)
+    .then(alert("Serivço aceito com sucesso"))
+    .then(navigation.navigate("Clients", servicoModal))
   }
 
   useEffect(() => {
@@ -76,7 +82,7 @@ export default function Begin({ route }) {
             <Text style={styles.modalText}>{servicoModal.titulo}</Text>
             
             <Text style={styles.modalSubTitle}>Descriçao:</Text>
-            <Text style={styles.modalText}>{servicoModal.descricao}</Text>
+            <Text style={styles.modalText}>{servicoModal.descricaoServico}</Text>
             
             <Text style={styles.modalSubTitle}>Nome do cliente:</Text>
             <Text style={styles.modalText}>{servicoModal.nome}</Text>
@@ -92,8 +98,10 @@ export default function Begin({ route }) {
             
             <View style={styles.containerButtonModal}>
               <Pressable
-                style={[styles.buttonModal, styles.buttonClose]}
-                onPress={() => AlertaDeChat(servicoModal.celular.toString())}
+                style={[styles.buttonModal, styles.buttonAceite]}
+                onPress={() => servicoModal.nome == route.params.usuario.nome
+                  ? alert('Você não pode aceitar seu próprio serviço') 
+                  : AceitarServico(servicoModal)}
               >
                 <Text style={styles.textStyle}>Aceitar</Text>
               </Pressable>
@@ -129,11 +137,11 @@ export default function Begin({ route }) {
         data={dadosBanco}
         renderItem={( { item } ) => {
             return(
-                <View style={styles.Servico}>
+                <Animatable.View animation='fadeInLeft' delay={250} style={styles.Servico}>
                     <Text
                     onPress={() => {setModal(!modal), setServicoModal(item)}}
                     style={styles.nomeTexo}>
-                      {item.titulo} - {item.descricao} - Valor: {item.valorServico}
+                      {item.titulo} - {item.descricaoServico} - Valor: {item.valorServico}
                     </Text>
                     <Text
                     onPress={() => {setModal(!modal), setServicoModal(item)}}
@@ -145,7 +153,7 @@ export default function Begin({ route }) {
                     style={styles.subTexto}>
                         Numero do Cliente: {FormataCelular(item.celular?.toString())} | Nome: {item.nome}
                     </Text>
-                </View>
+                </Animatable.View>
             )
         }}
       />
@@ -245,6 +253,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2
+  },
+  buttonAceite: {
+    backgroundColor: "green",
+    width: '100%'
   },
   buttonClose: {
     backgroundColor: "#dbc500",

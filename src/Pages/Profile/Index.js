@@ -4,14 +4,18 @@ import {
   StyleSheet, 
   TouchableOpacity, 
   TextInput,
+  Alert
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import * as Animatable from 'react-native-animatable'
 import {Picker} from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native'
+import { AntDesign } from '@expo/vector-icons'; 
 
 import Repositorio_LoginCadastro from '../../Repositorio/Repositorio_Sqlite/Repositorio_LoginCadastro'
 
 export default function Profile({ route }) {
+  const navigation = useNavigation();
 
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -42,6 +46,17 @@ export default function Profile({ route }) {
     .then(alert("Dados atualizados com sucesso"))
   }
 
+  function FazerLogout(){
+    Alert.alert("Atenção!", "Tem certeza que deseja sair da conta?", [
+      {
+        text: "Cancelar",
+        onPress: () => null,
+        style: "cancel"
+      },
+      { text: "Sim", onPress: () => navigation.navigate("Welcome") }
+    ]);
+  }
+
   useEffect(() => {
     Repositorio_LoginCadastro.obterParaLogin(route.params.usuario.email, route.params.usuario.senha)
     .then(dados => {setIdUsuario(dados.id), 
@@ -56,6 +71,14 @@ export default function Profile({ route }) {
     <View style={styles.container}>
       <Animatable.View animation='fadeInLeft' delay={500} style={styles.containerHeader}>
         <Text style={styles.message}>Olá {nome}</Text>
+        
+        <TouchableOpacity
+         onPress={FazerLogout()}>
+          <Text style={styles.messageLogout}>
+            <AntDesign name="logout" size={24} color="white" /> Logout
+          </Text>
+        </TouchableOpacity>
+
       </Animatable.View>
 
       <Animatable.View animation='fadeInUp' delay={500} style={styles.containerForm}>
@@ -66,7 +89,7 @@ export default function Profile({ route }) {
           style={styles.inputAreaText}
           placeholder='Seu Nome'
           value={nome}
-          onChangeText={ (valorNome) => setnome(valorNome)} 
+          onChangeText={ (valorNome) => setNome(valorNome)} 
           />
         </View>
 
@@ -135,12 +158,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#dbc500'
   },
   containerHeader:{
-    marginStart: "5%"
+    marginStart: "5%",
+    flexDirection: "row",
   },
   message:{
     fontSize: 28,
     fontWeight: 'bold',
     color: '#fff'
+  },
+  messageLogout:{
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
+    paddingLeft: 100
   },
   containerForm:{
     backgroundColor: '#fff',
