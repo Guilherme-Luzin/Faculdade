@@ -1,7 +1,6 @@
 import { 
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   FlatList,
   Alert,
@@ -59,6 +58,7 @@ export default function Clients({ route }) {
 
     Repositorio_Servicos.atualizarAceitoIdAceito(servico.aceito, servico.idAceito, servico.id)
     .then(alert("Parabéns, você concluiu seu serviço!"))
+    .then(setModal(!modal))
     .then(navigation.navigate("Clients"))
   }
 
@@ -81,8 +81,30 @@ export default function Clients({ route }) {
     ]);
   }
 
+  function EditarServico(servico){
+    if(servico.aceito == 1){
+      return alert("Não é possível editar serviços já aceitos")
+    }
+    if(servicoModal.aceito == 3){
+      Alert.alert("Atenção!", "Esse serviço já foi concluido, deseja avaliar o serviço feito?", [
+        {
+          text: "Cancelar",
+          onPress: () => null,
+          style: "cancel"
+        },
+        { text: "Sim", onPress: () => navigation.navigate("Avaliar", servicoModal) 
+        }
+      ]);
+    }
+    
+    navigation.navigate("Services", servicoModal)
+  }
+
   useEffect(() => {
-    Repositorio_Servicos.obterAceitosPeloUsuario(route.params.usuario.id).then(itens => setDadosBanco(itens));
+    route.params.usuario.categoria != "Cliente"
+    ? Repositorio_Servicos.obterAceitosPeloUsuario(route.params.usuario.id).then(itens => setDadosBanco(itens))
+    : Repositorio_Servicos.obterConcluidosDoUsuario(route.params.usuario.id).then(itens => setDadosBanco(itens));
+
     Repositorio_Servicos.obterTodosDoUsuario(route.params.usuario.id).then(itens => setSeuServico(itens))
   }, [route]);
 
@@ -123,7 +145,7 @@ export default function Clients({ route }) {
               <Pressable
                 style={[styles.buttonModal, styles.buttonConclui]}
                 onPress={() => servicoModal.idUsuario == route.params.usuario.id
-                  ? navigation.navigate("Services", servicoModal)
+                  ? EditarServico(servicoModal)
                   : ConcluirServico(servicoModal)}
               >
                 <Text style={styles.textStyle}>{editaConclui}</Text>
@@ -155,17 +177,47 @@ export default function Clients({ route }) {
             return(
                 <Animatable.View animation='fadeInLeft' delay={250} style={styles.Servico}>
                     <Text
-                    onPress={() => {setModal(!modal), setServicoModal(item)}}
+                    onPress={() => {
+                      if(item.idUsuario == route.params.usuario.id){
+                        setEditaConclui("Editar") 
+                        setDeletaDescarta("Deletar")
+                       } 
+                       else {
+                        setEditaConclui("Concluir") 
+                        setDeletaDescarta("Descartar")
+                       }
+                       setModal(!modal), setServicoModal(item)
+                    }}
                     style={styles.nomeTexo}>
                       {item.titulo} - {item.descricaoServico} - Valor: {item.valorServico}
                     </Text>
                     <Text
-                    onPress={() => {setModal(!modal), setServicoModal(item)}}
+                    onPress={() => {
+                      if(item.idUsuario == route.params.usuario.id){
+                        setEditaConclui("Editar") 
+                        setDeletaDescarta("Deletar")
+                       } 
+                       else {
+                        setEditaConclui("Concluir") 
+                        setDeletaDescarta("Descartar")
+                       }
+                       setModal(!modal), setServicoModal(item)
+                    }}
                     style={styles.enderecoTexto}>
                       {item.endereco} - {FormataCep(item.cep?.toString())}
                     </Text>
                     <Text 
-                    onPress={() => {setEditaConclui("Concluir"), setDeletaDescarta("Descartar"), setModal(!modal), setServicoModal(item)}}
+                    onPress={() => {
+                      if(item.idUsuario == route.params.usuario.id){
+                        setEditaConclui("Editar") 
+                        setDeletaDescarta("Deletar")
+                       } 
+                       else {
+                        setEditaConclui("Concluir") 
+                        setDeletaDescarta("Descartar")
+                       }
+                       setModal(!modal), setServicoModal(item)
+                    }}
                     style={styles.subTexto}>
                         Numero do Cliente: {FormataCelular(item.celular?.toString())} | Nome: {item.nome}
                     </Text>
@@ -174,7 +226,7 @@ export default function Clients({ route }) {
         }}
       />
 
-      <Text style={styles.titulo}>Seus Serviços</Text>
+      <Text style={styles.titulo}>Meus Serviços</Text>
       <FlatList 
         showsVerticalScrollIndicator={false}
         data={seuServicos}
@@ -182,7 +234,7 @@ export default function Clients({ route }) {
             return(
                 <Animatable.View animation='fadeInLeft' delay={250} style={styles.Servico}>
                     <Text
-                    onPress={() => {setModal(!modal), setServicoModal(item)}}
+                    onPress={() => {setEditaConclui("Editar"), setDeletaDescarta("Deletar"), setModal(!modal), setServicoModal(item)}}
                     style={styles.nomeTexo}>
                       {item.titulo} - {item.descricaoServico} - Valor: {item.valorServico}
                     </Text>

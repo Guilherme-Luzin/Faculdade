@@ -74,7 +74,7 @@ export default function Home({ route }) {
         component={Clients}
         initialParams={{ usuario }}
         options={{
-          headerTitle:'Clientes',
+          headerTitle:'Serviços aceitos / Meus serviços',
           headerStyle:{
             backgroundColor: '#dbc500',
           },

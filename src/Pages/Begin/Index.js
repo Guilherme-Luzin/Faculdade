@@ -51,6 +51,15 @@ export default function Begin({ route }) {
   }
 
   function AceitarServico(servico){
+
+    if(servicoModal.nome == route.params.usuario.nome){
+      return alert('Você não pode aceitar seu próprio serviço')
+    }
+
+    if(route.params.usuario.categoria == "Cliente"){
+      return alert('Clientes não podem aceitar serviços')
+    }
+
     servico.aceito = 1
     servico.idAceito = route.params.usuario.id
 
@@ -99,9 +108,7 @@ export default function Begin({ route }) {
             <View style={styles.containerButtonModal}>
               <Pressable
                 style={[styles.buttonModal, styles.buttonAceite]}
-                onPress={() => servicoModal.nome == route.params.usuario.nome
-                  ? alert('Você não pode aceitar seu próprio serviço') 
-                  : AceitarServico(servicoModal)}
+                onPress={() => AceitarServico(servicoModal)}
               >
                 <Text style={styles.textStyle}>Aceitar</Text>
               </Pressable>
@@ -160,7 +167,9 @@ export default function Begin({ route }) {
 
       <TouchableOpacity 
       style={styles.buttonNewServico}
-      onPress={() => navigation.navigate("Services", route.params.usuario)}>
+      onPress={() => route.params.usuario.categoria != "Cliente" 
+          ? alert('Somente Clientes podem criar serviços')
+          : navigation.navigate("Services", route.params.usuario)}>
           <Text style={styles.iconButton}>
             <AntDesign name="plus" size={24} color="black" />
           </Text>

@@ -76,7 +76,7 @@ const deletarUsuario = (id) => {
     return new Promise((resolve, reject) => {
       db.transaction((tx) => {
         tx.executeSql(
-          "DELETE FROM usuarios WHERE id=?;",
+          "DELETE FROM usuarios WHERE id=?; DELETE FROM servicos WHERE idUsuario=?;",
           [id],
           (_, { rowsAffected }) => {
             resolve(rowsAffected);
