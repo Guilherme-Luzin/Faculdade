@@ -67,6 +67,20 @@ const obterAceitosPeloUsuario = (id) => {
   });
 };
 
+const obterConcluidosDoUsuario = (id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM  usuarios u, servicos s WHERE u.id=? AND s.aceito = 3;",
+        [id],
+        
+        (_, { rows }) => resolve(rows._array),
+        (_, error) => reject(error)
+      );
+    });
+  });
+};
+
 const obterTodosDoUsuario = (id) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -136,5 +150,6 @@ export default {
     atualizarServico,
     obterAceitosPeloUsuario,
     obterTodosDoUsuario,
-    atualizarAceitoIdAceito
+    atualizarAceitoIdAceito,
+    obterConcluidosDoUsuario
 }

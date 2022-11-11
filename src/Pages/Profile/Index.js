@@ -46,6 +46,19 @@ export default function Profile({ route }) {
     .then(alert("Dados atualizados com sucesso"))
   }
 
+  function DeletarPerfil(){
+    Alert.alert("Atenção!", "Tem certeza que deletar essa conta?", [
+      {
+        text: "Cancelar",
+        onPress: () => null,
+        style: "cancel"
+      },
+      { text: "Sim", onPress: () => Repositorio_LoginCadastro.deletarUsuario(idUsuario)
+                                    .then(alert("Usuário deletado com sucesso"))
+                                    .then(navigation.navigate("Welcome")) }
+    ]);
+  }
+
   function FazerLogout(){
     Alert.alert("Atenção!", "Tem certeza que deseja sair da conta?", [
       {
@@ -82,6 +95,16 @@ export default function Profile({ route }) {
       </Animatable.View>
 
       <Animatable.View animation='fadeInUp' delay={500} style={styles.containerForm}>
+      <Text style={styles.title}>id</Text>
+        <View style={styles.inputArea}>
+          <TextInput 
+          editable={false}
+          style={styles.inputAreaEmail}
+          placeholder='0'
+          value={idUsuario.toString()} 
+          />
+      </View>
+
       <Text style={styles.title}>Nome</Text>
         <View style={styles.inputArea}>
           <TextInput 
@@ -100,7 +123,6 @@ export default function Profile({ route }) {
           style={styles.inputAreaEmail}
           placeholder='exemplo@exemplo.exemplo'
           value={email}
-          onChangeText={ (valorEmail) => setEmail(valorEmail)} 
           />
         </View>
 
@@ -147,6 +169,12 @@ export default function Profile({ route }) {
           <Text style={styles.buttonText}
           onPress={AtualizarPerfil}>Atualizar Perfil</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity 
+        style={styles.buttonDelete}>
+          <Text style={styles.buttonText}
+          onPress={DeletarPerfil}>Deletar Perfil</Text>
+        </TouchableOpacity>
       </Animatable.View>
     </View>
   )
@@ -182,7 +210,7 @@ const styles = StyleSheet.create({
   }, 
   title:{
     fontSize: 20,
-    marginTop: 18
+    marginTop: 5
   },
   inputArea:{
     flexDirection: 'row',
@@ -228,6 +256,15 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  buttonDelete:{
+    backgroundColor: 'red',
+    width: '100%',
+    borderRadius: 4,
+    paddingVertical: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 5
   },
   buttonText:{
     color: '#fff',
