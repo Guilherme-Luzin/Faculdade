@@ -6,6 +6,7 @@ import SignUp from '../Pages/SignUp/Index';
 import Home from '../Pages/Home/Index';
 import Categoria from '../Pages/SignUp/Categoria';
 import Services from '../Pages/Services/Index'
+import Avaliation from '../Avaliation/Index';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,11 @@ export default function Routes(){
             <Stack.Screen 
                 name='Services'
                 component={Services}
+                options={{headerShown: false}}
+            />
+            <Stack.Screen 
+                name='Avaliation'
+                component={Avaliation}
                 options={{headerShown: false}}
             />
         </Stack.Navigator>

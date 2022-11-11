@@ -22,6 +22,7 @@ export default function Clients({ route }) {
   const [seuServicos, setSeuServico] = useState([]);
   const [editaConclui, setEditaConclui] = useState('');
   const [deletaDescarta, setDeletaDescarta] = useState('');
+  const [aceitosConcluidos, setAceitosConcluidos] = useState('');
   
   function FormataCelular(celular){
     return celular?.replace(/\D/g, '')
@@ -86,24 +87,34 @@ export default function Clients({ route }) {
       return alert("Não é possível editar serviços já aceitos")
     }
     if(servicoModal.aceito == 3){
-      Alert.alert("Atenção!", "Esse serviço já foi concluido, deseja avaliar o serviço feito?", [
-        {
-          text: "Cancelar",
-          onPress: () => null,
-          style: "cancel"
-        },
-        { text: "Sim", onPress: () => navigation.navigate("Avaliar", servicoModal) 
-        }
-      ]);
+      return navigation.navigate("Avaliation", servicoModal)
     }
     
     navigation.navigate("Services", servicoModal)
   }
 
+  function ApertaServico(item){
+      if(item.idUsuario == route.params.usuario.id){
+        if(item.aceito == 3){
+          setEditaConclui("Avaliar")
+          setDeletaDescarta("Deletar")
+        }
+        else{
+          setEditaConclui("Editar")
+          setDeletaDescarta("Deletar")
+        }
+       } 
+       else {
+        setEditaConclui("Concluir") 
+        setDeletaDescarta("Descartar")
+       }
+       setModal(!modal), setServicoModal(item)
+  }
+
   useEffect(() => {
     route.params.usuario.categoria != "Cliente"
-    ? Repositorio_Servicos.obterAceitosPeloUsuario(route.params.usuario.id).then(itens => setDadosBanco(itens))
-    : Repositorio_Servicos.obterConcluidosDoUsuario(route.params.usuario.id).then(itens => setDadosBanco(itens));
+    ? Repositorio_Servicos.obterAceitosPeloUsuario(route.params.usuario.id).then(itens => setDadosBanco(itens)).then(setAceitosConcluidos("Aceito por você"))
+    : Repositorio_Servicos.obterConcluidosDoUsuario(route.params.usuario.id).then(itens => setDadosBanco(itens)).then(setAceitosConcluidos("Concluido por terceiros"));
 
     Repositorio_Servicos.obterTodosDoUsuario(route.params.usuario.id).then(itens => setSeuServico(itens))
   }, [route]);
@@ -169,7 +180,7 @@ export default function Clients({ route }) {
         </View>
       </Modal>
 
-      <Text style={styles.titulo}>Serviços Aceitos</Text>
+      <Text style={styles.titulo}>Serviços {aceitosConcluidos}</Text>
       <FlatList 
         showsVerticalScrollIndicator={false}
         data={dadosBanco}
@@ -177,47 +188,17 @@ export default function Clients({ route }) {
             return(
                 <Animatable.View animation='fadeInLeft' delay={250} style={styles.Servico}>
                     <Text
-                    onPress={() => {
-                      if(item.idUsuario == route.params.usuario.id){
-                        setEditaConclui("Editar") 
-                        setDeletaDescarta("Deletar")
-                       } 
-                       else {
-                        setEditaConclui("Concluir") 
-                        setDeletaDescarta("Descartar")
-                       }
-                       setModal(!modal), setServicoModal(item)
-                    }}
+                    onPress={() => ApertaServico(item)}
                     style={styles.nomeTexo}>
                       {item.titulo} - {item.descricaoServico} - Valor: {item.valorServico}
                     </Text>
                     <Text
-                    onPress={() => {
-                      if(item.idUsuario == route.params.usuario.id){
-                        setEditaConclui("Editar") 
-                        setDeletaDescarta("Deletar")
-                       } 
-                       else {
-                        setEditaConclui("Concluir") 
-                        setDeletaDescarta("Descartar")
-                       }
-                       setModal(!modal), setServicoModal(item)
-                    }}
+                    onPress={() => ApertaServico(item)}
                     style={styles.enderecoTexto}>
                       {item.endereco} - {FormataCep(item.cep?.toString())}
                     </Text>
                     <Text 
-                    onPress={() => {
-                      if(item.idUsuario == route.params.usuario.id){
-                        setEditaConclui("Editar") 
-                        setDeletaDescarta("Deletar")
-                       } 
-                       else {
-                        setEditaConclui("Concluir") 
-                        setDeletaDescarta("Descartar")
-                       }
-                       setModal(!modal), setServicoModal(item)
-                    }}
+                    onPress={() => ApertaServico(item)}
                     style={styles.subTexto}>
                         Numero do Cliente: {FormataCelular(item.celular?.toString())} | Nome: {item.nome}
                     </Text>
