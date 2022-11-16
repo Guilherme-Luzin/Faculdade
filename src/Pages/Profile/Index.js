@@ -23,6 +23,7 @@ export default function Profile({ route }) {
   const [categoria, setCategoria] = useState('');
   const [descricao, setDescricao] = useState('');
   const [idUsuario, setIdUsuario] = useState(0);
+  const [avaliacao, setAvaliacao] = useState(0);
 
   function FormataCelular(celular){
     return celular.replace(/\D/g, '')
@@ -77,104 +78,106 @@ export default function Profile({ route }) {
                     setEmail(dados.email),
                     setCelular(FormataCelular(dados.celular.toString())),
                     setCategoria(dados.categoria),
-                    setDescricao(dados.descricao)})
+                    setDescricao(dados.descricao),
+                    setAvaliacao(dados.avaliacao)})
   }, [route]);
 
   return (
     <View style={styles.container}>
       <Animatable.View animation='fadeInLeft' delay={500} style={styles.containerHeader}>
-        <Text style={styles.message}>Olá {nome}</Text>
-        
-        <TouchableOpacity
-         onPress={FazerLogout}>
-          <Text style={styles.messageLogout}>
-            <AntDesign name="logout" size={24} color="white" /> Sair
+          <Text style={styles.message}>
+            Olá {nome}, 
+            <TouchableOpacity
+            onPress={FazerLogout}>
+              <Text style={styles.messageLogout}>
+                <AntDesign name="logout" size={24} color="white" /> Sair
+              </Text>
+            </TouchableOpacity>
           </Text>
-        </TouchableOpacity>
 
-      </Animatable.View>
+        </Animatable.View>
 
-      <Animatable.View animation='fadeInUp' delay={500} style={styles.containerForm}>
-      <Text style={styles.title}>id</Text>
-        <View style={styles.inputArea}>
-          <TextInput 
-          editable={false}
-          style={styles.inputAreaEmail}
-          placeholder='0'
-          value={idUsuario.toString()} 
-          />
-      </View>
+        <Animatable.View animation='fadeInUp' delay={500} style={styles.containerForm}>
+        <Text style={styles.title}>Nome</Text>
+          <View style={styles.inputArea}>
+            <TextInput 
+            autoCapitalize='words'
+            style={styles.inputAreaText}
+            placeholder='Seu Nome'
+            value={nome}
+            onChangeText={ (valorNome) => setNome(valorNome)} 
+            />
+          </View>
 
-      <Text style={styles.title}>Nome</Text>
-        <View style={styles.inputArea}>
-          <TextInput 
-          autoCapitalize='words'
-          style={styles.inputAreaText}
-          placeholder='Seu Nome'
-          value={nome}
-          onChangeText={ (valorNome) => setNome(valorNome)} 
-          />
-        </View>
+          <Text style={styles.title}>email</Text>
+          <View style={styles.inputArea}>
+            <TextInput 
+            editable={false}
+            style={styles.inputAreaEmail}
+            placeholder='exemplo@exemplo.exemplo'
+            value={email}
+            />
+          </View>
 
-        <Text style={styles.title}>email</Text>
-        <View style={styles.inputArea}>
-          <TextInput 
-          editable={false}
-          style={styles.inputAreaEmail}
-          placeholder='exemplo@exemplo.exemplo'
-          value={email}
-          />
-        </View>
+          <Text style={styles.title}>Telefone Celular</Text>
+          <View style={styles.inputArea}>
+            <TextInput 
+            keyboardType='number-pad'
+            style={styles.inputAreaText}
+            placeholder='(99) 9 9999-9999'
+            value={celular}
+            onChangeText={ (valorCelular) => setCelular(FormataCelular(valorCelular))} 
+            />
+          </View>
 
-        <Text style={styles.title}>Telefone Celular</Text>
-        <View style={styles.inputArea}>
-          <TextInput 
-          keyboardType='number-pad'
-          style={styles.inputAreaText}
-          placeholder='(99) 9 9999-9999'
-          value={celular}
-          onChangeText={ (valorCelular) => setCelular(FormataCelular(valorCelular))} 
-          />
-        </View>
+          <Text style={styles.title}>Categoria</Text>
+          <View style={styles.inputArea}>
+            <Picker selectedValue={categoria}
+              onValueChange={(itemValue, itemIndex) =>
+              setCategoria(itemValue)}
+              style={styles.pickerStyle}>
+                  <Picker.Item label='Selecione sua categoria' value='' />
+                  <Picker.Item label='Cliente' value='Cliente'/>
+                  <Picker.Item label='Desenvolvedor' value='Desenvolvedor'/>
+                  <Picker.Item label='Encanador' value='Encanador'/>
+                  <Picker.Item label='Pedreiro' value='Pedreiro'/>
+                  <Picker.Item label='Outros' value='Outros'/>
+            </Picker>
+          </View>
 
-        <Text style={styles.title}>Categoria</Text>
-        <View style={styles.inputArea}>
-          <Picker selectedValue={categoria}
-            onValueChange={(itemValue, itemIndex) =>
-            setCategoria(itemValue)}
-            style={styles.pickerStyle}>
-                <Picker.Item label='Selecione sua categoria' value='' />
-                <Picker.Item label='Cliente' value='Cliente'/>
-                <Picker.Item label='Desenvolvedor' value='Desenvolvedor'/>
-                <Picker.Item label='Encanador' value='Encanador'/>
-                <Picker.Item label='Pedreiro' value='Pedreiro'/>
-                <Picker.Item label='Outros' value='Outros'/>
-          </Picker>
-        </View>
+          <Text style={styles.title}>Descrição da Categoria</Text>
+            <View style={styles.inputArea}>
+              <TextInput 
+              style={styles.inputDescricao}
+              editable={categoria === 'Cliente' ? false : true} 
+              placeholder='Escreva uma breve descrição do que você faz (Não necessário para clientes)' 
+              multiline={true}
+              value={categoria === 'Cliente' ? '' : descricao}
+              onChangeText={ (valorDescricao) => setDescricao(valorDescricao)} 
+              />
+            </View>
 
-        <Text style={styles.title}>Descrição da Categoria</Text>
-        <View style={styles.inputArea}>
-          <TextInput 
-          style={styles.inputDescricao}
-          editable={categoria === 'Cliente' ? false : true} 
-          placeholder='Escreva uma breve descrição do que você faz (Não necessário para clientes)' 
-          multiline={true}
-          value={categoria === 'Cliente' ? '' : descricao}
-          onChangeText={ (valorDescricao) => setDescricao(valorDescricao)} 
-          />
-        </View>
+        <Text style={styles.title}>Avaliação</Text>
+          <View style={styles.inputArea}>
+            <TextInput 
+            editable={false}
+            style={styles.inputAreaEmail}
+            placeholder='0'
+            value={avaliacao.toFixed(1).toString()} 
+            />
+          </View>
 
-        <TouchableOpacity 
-        style={styles.button}>
-          <Text style={styles.buttonText}
-          onPress={AtualizarPerfil}>Atualizar Perfil</Text>
-        </TouchableOpacity>
+          <TouchableOpacity 
+          style={styles.button}>
+            <Text style={styles.buttonText}
+            onPress={AtualizarPerfil}>Atualizar Perfil</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity 
-        style={styles.buttonDelete}>
-          <Text style={styles.buttonText}
-          onPress={DeletarPerfil}>Deletar Perfil</Text>
-        </TouchableOpacity>
+          <TouchableOpacity 
+          style={styles.buttonDelete}>
+            <Text style={styles.buttonText}
+            onPress={DeletarPerfil}>Deletar Perfil</Text>
+          </TouchableOpacity>
       </Animatable.View>
     </View>
   )
@@ -192,13 +195,13 @@ const styles = StyleSheet.create({
   message:{
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff'
+    color: '#fff',
+    flexDirection: "row",
   },
   messageLogout:{
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff',
-    paddingLeft: 155
+    color: '#fff'
   },
   containerForm:{
     backgroundColor: '#fff',
@@ -229,6 +232,7 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 16,
     backgroundColor: "#ebebeb",
+    marginBottom: 10
   },
   inputDescricao:{
     width: '100%',
@@ -239,14 +243,12 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderTopWidth: 1,
     height: 100,
-    marginBottom: 12,
     paddingLeft: 10,
     paddingBottom: 50,
     fontSize: 16
   },
   pickerStyle: {
     width: '100%',
-    marginBottom: 12,
     fontSize: 16,
   },
   button:{

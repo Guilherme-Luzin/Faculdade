@@ -1,10 +1,10 @@
 import db from './SqliteDatabase'
 
 db.transaction((tx) => {
-    //tx.executeSql("DROP TABLE usuarios;");
+    // tx.executeSql("DROP TABLE usuarios;");
 
     tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS usuarios (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, email TEXT, senha TEXT, celular INT, categoria TEXT, descricao TEXT);"
+        "CREATE TABLE IF NOT EXISTS usuarios (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, email TEXT, senha TEXT, celular INT, categoria TEXT, descricao TEXT, avaliacao INT, qtdVotos INT);"
     );
 });
 
@@ -12,7 +12,7 @@ const incluirUsuario = (obj) => {
 return new Promise((resolve, reject) => {
     db.transaction((tx) => {
     tx.executeSql(
-        "INSERT INTO usuarios (nome, email, senha, celular, categoria, descricao) values (?, ?, ?, ?, ?, ?);",
+        "INSERT INTO usuarios (nome, email, senha, celular, categoria, descricao, avaliacao, qtdVotos) values (?, ?, ?, ?, ?, ?, 0, 0);",
         [obj.nome, obj.email, obj.senha, obj.celular, obj.categoria, obj.descricao,],
         
         (_, { rowsAffected, insertId }) => {
@@ -40,6 +40,23 @@ const obterParaLogin = (email, senha) => {
         );
       });
     });
+};
+
+const obterPorId = (id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM usuarios WHERE id=?;",
+        [id],
+        
+        (_, { rows }) => {
+          if (rows.length > 0) resolve(rows._array[0]);
+          else reject("Usuario não encontrado");
+        },
+        (_, error) => reject(error)
+      );
+    });
+  });
 };
 
 const obterTodos = () => {
@@ -72,6 +89,22 @@ const atualizarUsuario = (obj, id) => {
   });
 }
 
+const atualizarAvaliacaoDoUsuario = (avaliacao, qtdVotos, id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "UPDATE usuarios SET avaliacao=?, qtdVotos=? WHERE id=?;",
+        [avaliacao, qtdVotos, id],
+        (_, { rowsAffected }) => {
+          if (rowsAffected > 0) resolve(rowsAffected);
+          else reject("Error updating obj: id=" + id);
+        },
+        (_, error) => reject(error)
+      );
+    });
+  });
+}
+
 const deletarUsuario = (id) => {
     return new Promise((resolve, reject) => {
       db.transaction((tx) => {
@@ -92,5 +125,7 @@ export default {
     obterParaLogin,
     obterTodos,
     deletarUsuario,
-    atualizarUsuario
+    atualizarUsuario,
+    atualizarAvaliacaoDoUsuario,
+    obterPorId
 }
