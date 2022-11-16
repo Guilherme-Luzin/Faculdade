@@ -116,8 +116,14 @@ export default function Clients({ route }) {
   }
 
   function ApertaMeusServicos(item){
-    setEditaConclui("Editar")
-    setDeletaDescarta("Deletar")
+    if(item.aceito == 3){
+      setEditaConclui("Avaliar")
+      setDeletaDescarta("Deletar")
+    }
+    else{
+      setEditaConclui("Editar")
+      setDeletaDescarta("Deletar")
+    }
     setModal(!modal)
     setServicoModal(item)
 
