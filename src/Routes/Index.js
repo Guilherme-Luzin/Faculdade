@@ -6,7 +6,7 @@ import SignUp from '../Pages/SignUp/Index';
 import Home from '../Pages/Home/Index';
 import Categoria from '../Pages/SignUp/Categoria';
 import Services from '../Pages/Services/Index'
-import Avaliation from '../Avaliation/Index';
+import Avaliation from '../Pages/Avaliation/Index';
 
 const Stack = createNativeStackNavigator();
 

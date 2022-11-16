@@ -1,10 +1,10 @@
 import db from './SqliteDatabase'
 
 db.transaction((tx) => {
-    //tx.executeSql("DROP TABLE servicos;");
+    // tx.executeSql("DROP TABLE servicos;");
 
     tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS servicos (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, descricaoServico TEXT, endereco TEXT, cep INT, valorServico INT, aceito INT, idAceito INT, idUsuario INT,  FOREIGN KEY (idUsuario) REFERENCES usuarios(id));"
+        "CREATE TABLE IF NOT EXISTS servicos (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, descricaoServico TEXT, endereco TEXT, cep INT, valorServico INT, aceito INT, idAceito INT, status TEXT, idUsuario INT,  FOREIGN KEY (idUsuario) REFERENCES usuarios(id));"
     );
 });
 
@@ -12,7 +12,7 @@ const incluirServico = (obj) => {
     return new Promise((resolve, reject) => {
         db.transaction((tx) => {
         tx.executeSql(
-            "INSERT INTO servicos (titulo, descricaoServico, endereco, cep, valorServico, idUsuario, aceito) values (?, ?, ?, ?, ?, ?, ?);",
+            "INSERT INTO servicos (titulo, descricaoServico, endereco, cep, valorServico, idUsuario, aceito, status) values (?, ?, ?, ?, ?, ?, ?, 'Aberto');",
             [obj.titulo, obj.descricaoServico, obj.endereco, obj.cepFormatado, obj.valorServico, obj.idUsuario, obj.aceito],
             
             (_, { rowsAffected, insertId }) => {
@@ -111,12 +111,12 @@ const atualizarServico = (obj, id) => {
   });
 }
 
-const atualizarAceitoIdAceito = (aceito, idAceito, id) => {
+const atualizarAceitoIdAceito = (aceito, idAceito, status, id) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        "UPDATE servicos SET aceito=?, idAceito=? WHERE id=?;",
-        [aceito, idAceito, id],
+        "UPDATE servicos SET aceito=?, idAceito=?, status=? WHERE id=?;",
+        [aceito, idAceito, status, id],
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) resolve(rowsAffected);
           else reject("Error updating obj: id=" + id);

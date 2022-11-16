@@ -62,8 +62,9 @@ export default function Begin({ route }) {
 
     servico.aceito = 1
     servico.idAceito = route.params.usuario.id
+    servico.status = "Aceito"
 
-    Repositorio_Servicos.atualizarAceitoIdAceito(servico.aceito, servico.idAceito, servico.id)
+    Repositorio_Servicos.atualizarAceitoIdAceito(servico.aceito, servico.idAceito, servico.status, servico.id)
     .then(alert("Serivço aceito com sucesso"))
     .then(navigation.navigate("Clients", servicoModal))
   }
@@ -104,6 +105,9 @@ export default function Begin({ route }) {
 
             <Text style={styles.modalSubTitle}>Valor Do Serviço:</Text>
             <Text style={styles.modalText}>{servicoModal.valorServico}</Text>
+
+            <Text style={styles.modalSubTitle}>Status Do Serviço:</Text>
+            <Text style={styles.modalText}>{servicoModal.status}</Text>
             
             <View style={styles.containerButtonModal}>
               <Pressable
@@ -148,7 +152,7 @@ export default function Begin({ route }) {
                     <Text
                     onPress={() => {setModal(!modal), setServicoModal(item)}}
                     style={styles.nomeTexo}>
-                      {item.titulo} - {item.descricaoServico} - Valor: {item.valorServico}
+                      {item.titulo} - {item.descricaoServico} - Valor: {item.valorServico} - Status: {item.status}
                     </Text>
                     <Text
                     onPress={() => {setModal(!modal), setServicoModal(item)}}

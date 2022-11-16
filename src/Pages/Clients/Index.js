@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react'
 import * as Animatable from 'react-native-animatable'
 
 import Repositorio_Servicos from '../../Repositorio/Repositorio_Sqlite/Repositorio_Servicos'
+import Repositorio_LoginCadastro from '../../Repositorio/Repositorio_Sqlite/Repositorio_LoginCadastro'
 
 export default function Clients({ route }) {
   const navigation = useNavigation();
@@ -23,6 +24,7 @@ export default function Clients({ route }) {
   const [editaConclui, setEditaConclui] = useState('');
   const [deletaDescarta, setDeletaDescarta] = useState('');
   const [aceitosConcluidos, setAceitosConcluidos] = useState('');
+  const [prestadorServico, setPrestadorServico] = useState('')
   
   function FormataCelular(celular){
     return celular?.replace(/\D/g, '')
@@ -44,8 +46,8 @@ export default function Clients({ route }) {
         onPress: () => null,
         style: "cancel"
       },
-      { text: "Sim", onPress: () => { servico.idAceito = null, servico.aceito = 0
-        Repositorio_Servicos.atualizarAceitoIdAceito(servico.aceito, servico.idAceito, servico.id)
+      { text: "Sim", onPress: () => { servico.idAceito = null, servico.aceito = 0, servico.status = "Aberto"
+        Repositorio_Servicos.atualizarAceitoIdAceito(servico.aceito, servico.idAceito, servico.status, servico.id)
         .then(alert("Serviço descartado com sucesso"))
         .then(setModal(!modal))
         .then(navigation.navigate("Clients"))} 
@@ -55,9 +57,9 @@ export default function Clients({ route }) {
 
   function ConcluirServico(servico){
     servico.aceito = 3
-    servico.idAceito = null
+    servico.status = "Concluido"
 
-    Repositorio_Servicos.atualizarAceitoIdAceito(servico.aceito, servico.idAceito, servico.id)
+    Repositorio_Servicos.atualizarAceitoIdAceito(servico.aceito, servico.idAceito, servico.status, servico.id)
     .then(alert("Parabéns, você concluiu seu serviço!"))
     .then(setModal(!modal))
     .then(navigation.navigate("Clients"))
@@ -83,11 +85,13 @@ export default function Clients({ route }) {
   }
 
   function EditarServico(servico){
-    if(servico.aceito == 1){
-      return alert("Não é possível editar serviços já aceitos")
+    if(servico.aceito == 1 || servico.aceito == 4){
+      return alert("Não é possível editar serviços já aceitos / fechados")
     }
     if(servicoModal.aceito == 3){
-      return navigation.navigate("Avaliation", servicoModal)
+      var idServico = servicoModal.id
+      var dadosServicoUsuario = {prestadorServico, idServico}
+      return navigation.navigate("Avaliation", dadosServicoUsuario)
     }
     
     navigation.navigate("Services", servicoModal)
@@ -111,12 +115,24 @@ export default function Clients({ route }) {
        setModal(!modal), setServicoModal(item)
   }
 
+  function ApertaMeusServicos(item){
+    setEditaConclui("Editar")
+    setDeletaDescarta("Deletar")
+    setModal(!modal)
+    setServicoModal(item)
+
+    if(item.idAceito != null && item.idAceito != 0 && item.idAceito != undefined){
+      Repositorio_LoginCadastro.obterPorId(item.idAceito).then(itens => setPrestadorServico(itens))
+    }
+  }
+
   useEffect(() => {
     route.params.usuario.categoria != "Cliente"
     ? Repositorio_Servicos.obterAceitosPeloUsuario(route.params.usuario.id).then(itens => setDadosBanco(itens)).then(setAceitosConcluidos("Aceito por você"))
     : Repositorio_Servicos.obterConcluidosDoUsuario(route.params.usuario.id).then(itens => setDadosBanco(itens)).then(setAceitosConcluidos("Concluido por terceiros"));
 
     Repositorio_Servicos.obterTodosDoUsuario(route.params.usuario.id).then(itens => setSeuServico(itens))
+
   }, [route]);
 
   return (
@@ -152,6 +168,12 @@ export default function Clients({ route }) {
             <Text style={styles.modalSubTitle}>Valor Do Serviço:</Text>
             <Text style={styles.modalText}>{servicoModal.valorServico}</Text>
 
+            <Text style={styles.modalSubTitle}>Status Do Serviço:</Text>
+            <Text style={styles.modalText}>{servicoModal.status}</Text>
+
+            <Text style={styles.modalSubTitle}>Avaliação do Prestador de serviço:</Text>
+            <Text style={styles.modalText}>{prestadorServico.avaliacao?.toFixed(1).toString()}</Text>
+            
             <View style={styles.containerButtonModal}>
               <Pressable
                 style={[styles.buttonModal, styles.buttonConclui]}
@@ -190,7 +212,7 @@ export default function Clients({ route }) {
                     <Text
                     onPress={() => ApertaServico(item)}
                     style={styles.nomeTexo}>
-                      {item.titulo} - {item.descricaoServico} - Valor: {item.valorServico}
+                      {item.titulo} - {item.descricaoServico} - Valor: {item.valorServico} - Status: {item.status}
                     </Text>
                     <Text
                     onPress={() => ApertaServico(item)}
@@ -215,12 +237,12 @@ export default function Clients({ route }) {
             return(
                 <Animatable.View animation='fadeInLeft' delay={250} style={styles.Servico}>
                     <Text
-                    onPress={() => {setEditaConclui("Editar"), setDeletaDescarta("Deletar"), setModal(!modal), setServicoModal(item)}}
+                    onPress={() => ApertaMeusServicos(item)}
                     style={styles.nomeTexo}>
-                      {item.titulo} - {item.descricaoServico} - Valor: {item.valorServico}
+                      {item.titulo} - {item.descricaoServico} - Valor: {item.valorServico} - Status: {item.status}
                     </Text>
                     <Text
-                    onPress={() => {setEditaConclui("Editar"), setDeletaDescarta("Deletar"), setModal(!modal), setServicoModal(item)}}
+                    onPress={() => ApertaMeusServicos(item)}
                     style={styles.enderecoTexto}>
                       {item.endereco} - {FormataCep(item.cep?.toString())}
                     </Text>
