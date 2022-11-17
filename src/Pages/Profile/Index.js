@@ -157,16 +157,6 @@ export default function Profile({ route }) {
               />
             </View>
 
-        <Text style={styles.title}>Avaliação</Text>
-          <View style={styles.inputArea}>
-            <TextInput 
-            editable={false}
-            style={styles.inputAreaEmail}
-            placeholder='0'
-            value={avaliacao.toFixed(1).toString()} 
-            />
-          </View>
-
           <TouchableOpacity 
           style={styles.button}>
             <Text style={styles.buttonText}
@@ -245,7 +235,8 @@ const styles = StyleSheet.create({
     height: 100,
     paddingLeft: 10,
     paddingBottom: 50,
-    fontSize: 16
+    fontSize: 16,
+    marginBottom: 10,
   },
   pickerStyle: {
     width: '100%',
