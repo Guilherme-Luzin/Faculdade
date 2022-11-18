@@ -24,7 +24,8 @@ export default function Clients({ route }) {
   const [editaConclui, setEditaConclui] = useState('');
   const [deletaDescarta, setDeletaDescarta] = useState('');
   const [aceitosConcluidos, setAceitosConcluidos] = useState('');
-  const [prestadorServico, setPrestadorServico] = useState('')
+  const [prestadorServico, setPrestadorServico] = useState('');
+  const [idUsuario, setIdUsuario] = useState(0);
   
   function FormataCelular(celular){
     return celular?.replace(/\D/g, '')
@@ -98,7 +99,7 @@ export default function Clients({ route }) {
   }
 
   function ApertaServico(item){
-      if(item.idUsuario == route.params.usuario.id){
+      if(item.idUsuario == idUsuario){
         if(item.aceito == 3){
           setEditaConclui("Avaliar")
           setDeletaDescarta("Deletar")
@@ -113,6 +114,10 @@ export default function Clients({ route }) {
         setDeletaDescarta("Descartar")
        }
        setModal(!modal), setServicoModal(item)
+
+       if(item.idAceito != null && item.idAceito != 0 && item.idAceito != undefined){
+        Repositorio_LoginCadastro.obterPorId(item.idAceito).then(itens => setPrestadorServico(itens))
+      }
   }
 
   function ApertaMeusServicos(item){
@@ -126,18 +131,23 @@ export default function Clients({ route }) {
     }
     setModal(!modal)
     setServicoModal(item)
-
+    
     if(item.idAceito != null && item.idAceito != 0 && item.idAceito != undefined){
       Repositorio_LoginCadastro.obterPorId(item.idAceito).then(itens => setPrestadorServico(itens))
     }
   }
 
   useEffect(() => {
-    route.params.usuario.categoria != "Cliente"
-    ? Repositorio_Servicos.obterAceitosPeloUsuario(route.params.usuario.id).then(itens => setDadosBanco(itens)).then(setAceitosConcluidos("Aceito por você"))
-    : Repositorio_Servicos.obterConcluidosDoUsuario(route.params.usuario.id).then(itens => setDadosBanco(itens)).then(setAceitosConcluidos("Concluido por terceiros"));
+    (route.params.usuario.id == null || route.params.usuario.id == 0 || route.params.usuario.id == undefined)
+    ? Repositorio_LoginCadastro.obterParaLogin(route.params.usuario.email, route.params.usuario.senha).then(itens => setIdUsuario(itens.id))
+    : setIdUsuario(route.params.usuario.id)
+    
 
-    Repositorio_Servicos.obterTodosDoUsuario(route.params.usuario.id).then(itens => setSeuServico(itens))
+    route.params.usuario.categoria != "Cliente"
+    ? Repositorio_Servicos.obterAceitosPeloUsuario(idUsuario).then(itens => setDadosBanco(itens)).then(setAceitosConcluidos("Aceito por você"))
+    : Repositorio_Servicos.obterConcluidosDoUsuario(idUsuario).then(itens => setDadosBanco(itens)).then(setAceitosConcluidos("Concluido por terceiros"));
+
+    Repositorio_Servicos.obterTodosDoUsuario(idUsuario).then(itens => setSeuServico(itens))
 
   }, [route]);
 
@@ -183,7 +193,7 @@ export default function Clients({ route }) {
             <View style={styles.containerButtonModal}>
               <Pressable
                 style={[styles.buttonModal, styles.buttonConclui]}
-                onPress={() => servicoModal.idUsuario == route.params.usuario.id
+                onPress={() => servicoModal.idUsuario == idUsuario
                   ? EditarServico(servicoModal)
                   : ConcluirServico(servicoModal)}
               >
@@ -197,7 +207,7 @@ export default function Clients({ route }) {
               </Pressable>
               <Pressable
                 style={[styles.buttonModal, styles.buttonDelete]}
-                onPress={() => servicoModal.idUsuario == route.params.usuario.id
+                onPress={() => servicoModal.idUsuario == idUsuario
                   ? DeletarServico(servicoModal.id)
                   : DescartarServico(servicoModal)}
               >

@@ -14,6 +14,7 @@ import React, { useEffect, useState } from 'react'
 import * as Animatable from 'react-native-animatable'
 
 import Repositorio_Servicos from '../../Repositorio/Repositorio_Sqlite/Repositorio_Servicos'
+import Repositorio_LoginCadastro from '../../Repositorio/Repositorio_Sqlite/Repositorio_LoginCadastro'
 
 export default function Begin({ route }) {
   const navigation = useNavigation();
@@ -21,6 +22,7 @@ export default function Begin({ route }) {
   const [dadosBanco, setDadosBanco] = useState([]);
   const [modal, setModal] = useState(false);
   const [servicoModal, setServicoModal] = useState('');
+  const [usuario, setUsuario] = useState('');
   
   function FormataCelular(celular){
     return celular?.replace(/\D/g, '')
@@ -51,7 +53,6 @@ export default function Begin({ route }) {
   }
 
   function AceitarServico(servico){
-
     if(servicoModal.nome == route.params.usuario.nome){
       return alert('Você não pode aceitar seu próprio serviço')
     }
@@ -61,7 +62,7 @@ export default function Begin({ route }) {
     }
 
     servico.aceito = 1
-    servico.idAceito = route.params.usuario.id
+    servico.idAceito = usuario.id
     servico.status = "Aceito"
 
     Repositorio_Servicos.atualizarAceitoIdAceito(servico.aceito, servico.idAceito, servico.status, servico.id)
@@ -71,6 +72,7 @@ export default function Begin({ route }) {
 
   useEffect(() => {
     Repositorio_Servicos.obterComUsuario().then(itens => setDadosBanco(itens));
+    Repositorio_LoginCadastro.obterParaLogin(route.params.usuario.email, route.params.usuario.senha).then(itens => setUsuario(itens));
   }, [route]);
 
   return (
